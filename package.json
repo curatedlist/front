@@ -1,7 +1,13 @@
 {
-  "name": "front",
-  "version": "0.1.0",
-  "private": true,
+  "name": "curatedli.st",
+  "description": "Collaborative curated content",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/curatedlist/front.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
