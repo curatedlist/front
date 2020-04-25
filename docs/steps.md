@@ -51,3 +51,26 @@ See https://docs.magic.link/
 ```bash
 $ yarn add magic-sdk
 ```
+
+## Dockerize
+
+See https://mherman.org/blog/dockerizing-a-react-app/
+
+### Development mode 
+
+* Build the image
+```bash
+$ docker build -t curatedlist-project:front .
+```
+
+* Run the image
+```bash
+$ docker run \
+    -it \
+    --rm \
+    -v ${PWD}:/app \
+    -v /app/node_modules \
+    -p 3000:3000 \
+    -e CHOKIDAR_USEPOLLING=true \
+    sample:dev
+```
