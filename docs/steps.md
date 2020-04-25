@@ -44,3 +44,10 @@ See https://reacttraining.com/react-router/
 ```bash
 $ yarn add react-router-dom
 ```
+
+## Add the Magic Link SDK
+
+See https://docs.magic.link/
+```bash
+$ yarn add magic-sdk
+```

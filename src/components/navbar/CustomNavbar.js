@@ -18,17 +18,45 @@ import {
 
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from "headroom.js";
+// JavaScript plugin for auth magic links
+import { Magic } from 'magic-sdk';
 
 class CustomNavbar extends React.Component {
   state = {
     collapseClasses: "",
     collapseOpen: false,
+    magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
+    isLoggedIn: false
   };
 
   componentDidMount() {
     let headroom = new Headroom(document.getElementById("navbar-main"));
     headroom.init();
+    this.isLoggedIn();
   }
+
+  isLoggedIn = () => {
+    this.state.magic.user.isLoggedIn()
+      .then((isLoggedIn) => {
+        this.setState({
+          isLoggedIn: isLoggedIn
+        })
+      })
+  }
+
+  handleLogout = (e) => {
+    this.state.magic.user.logout()
+      .then(() => {
+        this.setState({
+          isLoggedIn: false
+        })
+      },
+        (error) => {
+          this.setState({
+            isLoggedIn: true
+          });
+        })
+  };
 
   onExiting = () => {
     this.setState({
@@ -49,6 +77,7 @@ class CustomNavbar extends React.Component {
         <Button
           className="btn-success btn-icon"
           color="success"
+          onClick={this.handleLogout}
         >
           <span className="btn-inner--icon">
             <i className="ni ni-button-power" />
@@ -60,7 +89,7 @@ class CustomNavbar extends React.Component {
       )
     } else {
       loginButton = (
-        <a href="/">
+        <Link to="/login">
           <Button
             className="btn-success btn-icon"
             color="success"
@@ -73,7 +102,7 @@ class CustomNavbar extends React.Component {
           </span>
           </Button>
 
-        </a>
+        </Link>
       )
     }
     return (
