@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -84,7 +85,7 @@ class CustomNavbar extends React.Component {
             id="navbar-main"
           >
             <Container>
-              <NavbarBrand className="mr-lg-5" to="/" >
+              <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <img
                   alt="..."
                   src={require("assets/img/theme/checklist.svg")}
@@ -103,12 +104,12 @@ class CustomNavbar extends React.Component {
                 <div className="navbar-collapse-header">
                   <Row>
                     <Col className="collapse-brand" xs="6">
-                      <a href="/">
+                      <Link to="/">
                         <img
                           alt="..."
                           src={require("assets/img/theme/checklist.svg")}
                         />
-                      </a>
+                      </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
                       <button className="navbar-toggler" id="navbar_global">

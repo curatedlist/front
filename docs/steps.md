@@ -18,6 +18,7 @@ See: https://reactjs.org/docs/create-a-new-react-app.html
 $ npx create-react-app front
 $ yarn install
 $ yarn start
+$ yarn add node-sass
 ```
 
 ## Install Argon Design System
@@ -34,4 +35,12 @@ $ yarn add argon-design-system-react
 $ yarn add reactstrap
 $ yarn add headroom
 $ yarn add jquery
+```
+
+## Add React Router
+
+See https://reacttraining.com/react-router/
+
+```bash
+$ yarn add react-router-dom
 ```

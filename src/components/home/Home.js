@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -22,13 +23,13 @@ function BigHero() {
         <span className="text-white">Collaborative Curated Content</span>
           </h1>
           <p className="lead text-white mt-4">Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content.</p>
-          <a href="/">
+          <Link to="/all">
             <Button
               className="btn-white mt-4"
               color="default">
               Explore Lists
                     </Button>
-          </a>
+          </Link>
         </div>
         <div className="mb-lg-auto col-lg-5">
           <div className="transform-perspective-right">

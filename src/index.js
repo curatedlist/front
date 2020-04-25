@@ -1,16 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Home from './components/home/Home';
+import UserProfile from './components/user/Profile';
+import UserLogin from './components/user/Login';
+import ExploreLists from './components/list/ExploreLists';
+import ListPage from './components/list/ListPage';
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
-import "assets/css/argon-design-system-react.css";
+import "assets/scss/argon-design-system-react.scss?v1.1.0";
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Home />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Switch>
+      <Route exact path="/" >
+        <Home />
+      </Route>
+      <Route path="/all" >
+        <ExploreLists />
+      </Route>
+      <Route exact path="/login" >
+        <UserLogin />
+      </Route>
+      <Route exact path="/user/:id"
+        render={(props) => <UserProfile {...props} />} />
+      <Route exact path="/list/:id"
+        render={(props) => <ListPage {...props} />} />
+    </Switch>
+  </BrowserRouter>,
   document.getElementById('root')
 );
