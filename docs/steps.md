@@ -60,7 +60,7 @@ See https://mherman.org/blog/dockerizing-a-react-app/
 
 * Build the image
 ```bash
-$ docker build -t curatedlist-project:front .
+$ docker build -t curatedlist-project:front-dev .
 ```
 
 * Run the image
@@ -72,5 +72,18 @@ $ docker run \
     -v /app/node_modules \
     -p 3000:3000 \
     -e CHOKIDAR_USEPOLLING=true \
-    sample:dev
+    curatedlist-project:front-dev
 ```
+
+### Production mode
+
+* Build the image
+```bash
+$ docker build -f Dockerfile.prod -t curatedlist-project:front .
+```
+
+* Run the image
+```bash
+$ docker run -it --rm -p 80:80 curatedlist-project:front
+```
+
