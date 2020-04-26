@@ -87,3 +87,10 @@ $ docker build -f Dockerfile.prod -t curatedlist-project:front .
 $ docker run -it --rm -p 80:80 curatedlist-project:front
 ```
 
+
+### GCloud
+
+```bash
+gcloud builds submit --tag gcr.io/curatedlist-project/back
+gcloud run deploy --image gcr.io/curatedlist-project/back --platform managed
+```
