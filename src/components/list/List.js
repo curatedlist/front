@@ -41,7 +41,7 @@ class List extends Component {
               delay={0}
               target={"tooltip" + this.props.owner.ID}
             >
-              {this.props.item.Owner.Name}
+              {this.props.owner.Name}
             </UncontrolledTooltip>
           </div>
         </td>
