@@ -25,6 +25,9 @@ ReactDOM.render(
       <Route exact path="/login" >
         <UserLogin />
       </Route>
+      <Route exact path="/myaccount" >
+        render={(props) => <UserProfile {...props} />} />
+      </Route>
       <Route exact path="/user/:id"
         render={(props) => <UserProfile {...props} />} />
       <Route exact path="/list/:id"

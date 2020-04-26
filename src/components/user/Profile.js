@@ -26,7 +26,7 @@ class UserProfile extends Component {
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
         if (this.props.match.params.id !== undefined) {
-            fetch(process.env.REACT_APP_API_URL + "users/" + this.props.match.params.id)
+            fetch(process.env.REACT_APP_API_URL + "users/id/" + this.props.match.params.id)
                 .then(res => res.json())
                 .then(
                     (result) => {
@@ -56,9 +56,12 @@ class UserProfile extends Component {
             } else if (!isLoaded) {
                 return <tr><td colSpan="3">Loading...</td></tr>;
             } else {
-                let itemsList = items.map((item, index) => {
-                    return <List key={index} item={item} index={index} owner={user} />
-                });
+                let itemsList = [];
+                if (items !== null) {
+                    itemsList = items.map((item, index) => {
+                        return <List key={index} item={item} index={index} owner={user} />
+                    });
+                }
                 return itemsList;
             }
         };

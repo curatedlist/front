@@ -26,7 +26,8 @@ class CustomNavbar extends React.Component {
     collapseClasses: "",
     collapseOpen: false,
     magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
-    isLoggedIn: false
+    isLoggedIn: false,
+    email: ''
   };
 
   componentDidMount() {
@@ -35,12 +36,20 @@ class CustomNavbar extends React.Component {
     this.isLoggedIn();
   }
 
+
+
   isLoggedIn = () => {
     this.state.magic.user.isLoggedIn()
       .then((isLoggedIn) => {
         this.setState({
           isLoggedIn: isLoggedIn
         })
+        if (isLoggedIn) {
+          this.state.magic.user.getMetadata()
+            .then((metadata) => {
+              this.props.onLoggedIn(metadata.email);
+            });
+        }
       })
   }
 
@@ -51,11 +60,11 @@ class CustomNavbar extends React.Component {
           isLoggedIn: false
         })
       },
-        (error) => {
+      (error) => {
           this.setState({
             isLoggedIn: true
           });
-        })
+      })
   };
 
   onExiting = () => {
@@ -83,7 +92,7 @@ class CustomNavbar extends React.Component {
             <i className="ni ni-button-power" />
           </span>
           <span className="nav-link-inner--text ml-1">
-            Logout
+            {this.props.email} Logout
           </span>
         </Button>
       )
