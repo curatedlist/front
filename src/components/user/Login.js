@@ -66,7 +66,7 @@ class UserLogin extends Component {
             return (
                 <>
                     <Redirect
-                        to="/myaccount"
+                        to="/"
                     />
                 </>
             );

@@ -3,17 +3,19 @@ import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
-  Button,
-  UncontrolledCollapse,
+  Container,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Media,
   NavbarBrand,
   Navbar,
-  NavItem,
-  NavLink,
   Nav,
-  Container,
+  NavItem,
   Row,
-  Col,
-  UncontrolledTooltip
+  UncontrolledCollapse,
+  UncontrolledDropdown
 } from "reactstrap";
 
 // JavaScript plugin that hides or shows a component based on your scroll
@@ -35,8 +37,6 @@ class CustomNavbar extends React.Component {
     headroom.init();
     this.isLoggedIn();
   }
-
-
 
   isLoggedIn = () => {
     this.state.magic.user.isLoggedIn()
@@ -60,11 +60,11 @@ class CustomNavbar extends React.Component {
           isLoggedIn: false
         })
       },
-      (error) => {
+        (error) => {
           this.setState({
             isLoggedIn: true
           });
-      })
+        })
   };
 
   onExiting = () => {
@@ -80,38 +80,71 @@ class CustomNavbar extends React.Component {
   };
 
   render() {
-    let loginButton
-    if (this.state.isLoggedIn) {
-      loginButton = (
-        <Button
-          className="btn-success btn-icon"
-          color="success"
-          onClick={this.handleLogout}
-        >
-          <span className="btn-inner--icon">
-            <i className="ni ni-button-power" />
-          </span>
-          <span className="nav-link-inner--text ml-1">
-            {this.props.email} Logout
-          </span>
-        </Button>
+    let loginDropdown
+    let togler
+    if (this.state.isLoggedIn && this.props.user) {
+      loginDropdown = (
+        <UncontrolledDropdown nav>
+          <DropdownToggle className="pr-0" nav>
+            <Media className="align-items-center">
+              <span className="avatar avatar-sm rounded-circle">
+                <img
+                  alt="..."
+                  src={this.props.user.AvatarURL}
+                />
+              </span>
+              <Media className="ml-2 d-none d-lg-block">
+                <span className="mb-0 text-sm font-weight-bold">
+                  {this.props.user.Name}
+                </span>
+              </Media>
+            </Media>
+          </DropdownToggle>
+          <DropdownMenu className="dropdown-menu-arrow" right>
+            <DropdownItem className="noti-title" header tag="div">
+              <h6 className="text-overflow m-0">Welcome!</h6>
+            </DropdownItem>
+            <DropdownItem to={"/user/" + this.props.user.ID} tag={Link}>
+              <i className="ni ni-single-02" />
+              <span>My profile</span>
+            </DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem onClick={this.handleLogout}>
+              <i className="ni ni-user-run" />
+              <span>Logout</span>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      )
+      togler = (
+        <button className="navbar-toggler" id="navbar_global">
+              <span className="avatar avatar-sm rounded-circle">
+                <img
+                  alt="..."
+                  src={this.props.user.AvatarURL}
+                />
+              </span>
+        </button>
       )
     } else {
-      loginButton = (
-        <Link to="/login">
-          <Button
-            className="btn-success btn-icon"
-            color="success"
+      loginDropdown = (
+        <NavItem>
+          <Link
+            className="nav-link-icon nav-link"
+            to="/login"
           >
-            <span className="btn-inner--icon">
-              <i className="ni ni-button-power" />
-            </span>
-            <span className="nav-link-inner--text ml-1">
-              Login / Register
-          </span>
-          </Button>
-
-        </Link>
+            <Media className="align-items-center">
+              <i className="ni ni-key-25" />
+              <span className="nav-link-inner--text">Login</span>
+            </Media>
+          </Link>
+        </NavItem>
+      )
+      togler = (
+        <button className="navbar-toggler" id="navbar_global">
+          <span />
+          <span />
+        </button>
       )
     }
     return (
@@ -126,12 +159,11 @@ class CustomNavbar extends React.Component {
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <img
                   alt="..."
-                  src={require("assets/img/theme/checklist.svg")}
+                  src={require("assets/img/logo.png")}
                 />
               </NavbarBrand>
-              <button className="navbar-toggler" id="navbar_global">
-                <span className="navbar-toggler-icon" />
-              </button>
+              {togler}
+
               <UncontrolledCollapse
                 toggler="#navbar_global"
                 navbar
@@ -145,39 +177,21 @@ class CustomNavbar extends React.Component {
                       <Link to="/">
                         <img
                           alt="..."
-                          src={require("assets/img/theme/checklist.svg")}
+                          src={require("assets/img/logo_black.png")}
                         />
                       </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
-                      <button className="navbar-toggler" id="navbar_global">
-                        <span />
-                        <span />
-                      </button>
+                      {togler}
                     </Col>
                   </Row>
                 </div>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://github.com/curatedlist"
-                      id="tooltip112445449"
-                      target="_blank"
-                    >
-                      <i className="fa fa-github" />
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Github
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip112445449">
-                      Star us on Github
-                    </UncontrolledTooltip>
-                  </NavItem>
-                  <NavItem className="d-none d-lg-block ml-lg-4">
-                    {loginButton}
-                  </NavItem>
+                  {loginDropdown}
                 </Nav>
+
+
+
               </UncontrolledCollapse>
             </Container>
           </Navbar>

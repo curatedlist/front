@@ -57,10 +57,30 @@ class UserProfile extends Component {
                 return <tr><td colSpan="3">Loading...</td></tr>;
             } else {
                 let itemsList = [];
-                if (items !== null) {
+                if (items !== null && items.length > 0) {
                     itemsList = items.map((item, index) => {
                         return <List key={index} item={item} index={index} owner={user} />
                     });
+                    return (
+                    <div className="mt-5 py-5 border-top text-center">
+                                <Row className="justify-content-center">
+                                    <Col lg="9">
+                                        <Table className="align-items-center" responsive>
+                                            <thead className="thead-light">
+                                                <tr>
+                                                    <th scope="col">List</th>
+                                                    <th scope="col">Collaborators</th>
+                                                    <th scope="col" />
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {itemsList}
+                                            </tbody>
+                                        </Table>
+                                    </Col>
+                                </Row>
+                            </div>
+                    )
                 }
                 return itemsList;
             }
@@ -109,24 +129,7 @@ class UserProfile extends Component {
                                     {this.state.name}
                                 </h3>
                             </div>
-                            <div className="mt-5 py-5 border-top text-center">
-                                <Row className="justify-content-center">
-                                    <Col lg="9">
-                                        <Table className="align-items-center" responsive>
-                                            <thead className="thead-light">
-                                                <tr>
-                                                    <th scope="col">List</th>
-                                                    <th scope="col">Collaborators</th>
-                                                    <th scope="col" />
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {loadItems()}
-                                            </tbody>
-                                        </Table>
-                                    </Col>
-                                </Row>
-                            </div>
+                            {loadItems()}
                         </div>
                     </Card>
                 </Container>

@@ -16,23 +16,17 @@ import "assets/scss/argon-design-system-react.scss?v1.1.0";
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" >
-        <Home />
-      </Route>
-      <Route path="/all" >
-        <ExploreLists />
-      </Route>
-      <Route exact path="/login" >
-        <UserLogin />
-      </Route>
-      <Route exact path="/myaccount" >
-        render={(props) => <UserProfile {...props} />} />
-      </Route>
+      <Route exact path="/"
+        component={Home} />
+      <Route exact path="/all"
+        component={ExploreLists} />
+      <Route exact path="/login"
+        component={UserLogin} />
       <Route exact path="/user/:id"
         render={(props) => <UserProfile {...props} />} />
       <Route exact path="/list/:id"
         render={(props) => <ListPage {...props} />} />
     </Switch>
-  </BrowserRouter>,
+  </BrowserRouter >,
   document.getElementById('root')
 );
