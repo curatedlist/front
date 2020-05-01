@@ -149,7 +149,7 @@ class ListPage extends Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
 
-    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.match.params.id)
+    fetch(process.env.REACT_APP_API_URL + "lists/id/" + this.props.match.params.id)
       .then(res => res.json())
       .then(
         (result) => {
