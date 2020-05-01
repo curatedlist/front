@@ -73,10 +73,8 @@ class UserLogin extends Component {
         } else {
             return (
                 <App>
-                    <Container className="pt-lg-7">
-                        <Row className="justify-content-center">
-                            <Col lg="5">
-                                <Card className="bg-secondary shadow border-0">
+                <Container>
+                                <Card className="card-profile bg-secondary shadow border-0">
                                     <CardBody className="px-lg-5 py-lg-5">
                                         <Form onSubmit={this.handleLogin} role="form">
                                             <FormGroup className="mb-3">
@@ -101,8 +99,6 @@ class UserLogin extends Component {
                                         </Form>
                                     </CardBody>
                                 </Card>
-                            </Col>
-                        </Row>
                     </Container>
 
                 </App>

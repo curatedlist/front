@@ -88,9 +88,20 @@ $ docker run -it --rm -p 80:80 curatedlist-project:front
 ```
 
 
-### GCloud
+## GCloud
 
 ```bash
 gcloud builds submit --tag gcr.io/curatedlist-project/back
 gcloud run deploy --image gcr.io/curatedlist-project/back --platform managed
 ```
+
+
+## Add Redux 
+
+See: https://react-redux.js.org/introduction/quick-start
+
+```bash
+$ yarn add react-redux
+```
+
+

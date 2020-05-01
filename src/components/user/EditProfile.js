@@ -1,91 +1,33 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 // reactstrap components
 import {
     Button,
     Card,
     Container,
+    FormGroup,
+    Form,
+    Input,
+    InputGroupAddon,
+    InputGroupText,
+    InputGroup,
     Row,
     Col,
-    Table
 } from "reactstrap";
 
 // core components
 import App from 'App'
-import List from 'components/list/List'
 
-class UserProfile extends Component {
-    state = {
-        isLoaded: false,
-        user: undefined,
-        avatarURL: '',
-        name: ''
-    }
+class EditProfile extends Component {
 
     componentDidMount() {
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
-        if (this.props.match.params.id !== undefined) {
-            fetch(process.env.REACT_APP_API_URL + "users/id/" + this.props.match.params.id)
-                .then(res => res.json())
-                .then(
-                    (result) => {
-                        this.setState({
-                            isLoaded: true,
-                            user: result.user,
-                            avatarURL: result.user.AvatarURL,
-                            name: result.user.Name,
-                            items: result.user.Lists
-                        });
-                    },
-                    (error) => {
-                        this.setState({
-                            isLoaded: true,
-                            error
-                        });
-                    }
-                )
-        }
     }
 
     render() {
-        var loadItems = () => {
-            const { error, isLoaded, items, user } = this.state;
-            if (error) {
-                return <div>Error: {error.message}</div>;
-            } else if (!isLoaded) {
-                return <div>Loading...</div>;
-            } else {
-                let itemsList = [];
-                if (items !== null && items.length > 0) {
-                    itemsList = items.map((item, index) => {
-                        return <List key={index} item={item} index={index} owner={user} />
-                    });
-                    return (
-                        <div className="mt-5 py-5 border-top text-center">
-                            <Row className="justify-content-center">
-                                <Col lg="9">
-                                    <Table className="align-items-center" responsive>
-                                        <thead className="thead-light">
-                                            <tr>
-                                                <th scope="col">List</th>
-                                                <th scope="col">Collaborators</th>
-                                                <th scope="col" />
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {itemsList}
-                                        </tbody>
-                                    </Table>
-                                </Col>
-                            </Row>
-                        </div>
-                    )
-                }
-                return itemsList;
-            }
-        };
         return (
             <App>
                 <Container>
@@ -97,7 +39,7 @@ class UserProfile extends Component {
                                         <img
                                             alt="..."
                                             className="rounded-circle"
-                                            src={this.state.avatarURL ? this.state.avatarURL : require("assets/img/theme/user.svg")}
+                                            src={this.props.user.avatarURL ? this.props.user.avatarURL : require("assets/img/theme/user.svg")}
                                         />
                                     </div>
                                 </Col>
@@ -135,11 +77,32 @@ class UserProfile extends Component {
                                 </Col>
                             </Row>
                             <div className="text-center mt-5">
-                                <h3>
-                                    {this.state.name}
-                                </h3>
+                            <Form>
+          <Row>
+            <Col md="6">
+              <FormGroup>
+                <Input
+                  id="exampleFormControlInput1"
+                  placeholder="David Santamaria"
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
+              <InputGroup className="mb-4">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-email-83" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input disabled placeholder="d.highwayman@gmail.com" type="email" />
+                </InputGroup>
+              </FormGroup>
+            </Col>
+          </Row>
+        </Form>
                             </div>
-                            {loadItems()}
                         </div>
                     </Card>
                 </Container>
@@ -148,4 +111,12 @@ class UserProfile extends Component {
         )
     };
 };
-export default UserProfile;
+
+const mapStateToProps = state => {
+    return state.user;
+};
+
+
+export default connect(
+    mapStateToProps
+)(EditProfile);

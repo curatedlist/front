@@ -124,6 +124,7 @@ function Features() {
 }
 
 class Home extends Component {
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;

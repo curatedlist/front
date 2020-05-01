@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+import { setUser } from "redux/actions";
 
 // reactstrap components
 import {
@@ -28,42 +31,70 @@ class CustomNavbar extends React.Component {
     collapseClasses: "",
     collapseOpen: false,
     magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
-    isLoggedIn: false,
-    email: ''
   };
 
   componentDidMount() {
     let headroom = new Headroom(document.getElementById("navbar-main"));
     headroom.init();
-    this.isLoggedIn();
+    if (Object.keys(this.props.user).length === 0) {
+      this.isLoggedIn();
+    }
   }
 
   isLoggedIn = () => {
     this.state.magic.user.isLoggedIn()
       .then((isLoggedIn) => {
-        this.setState({
-          isLoggedIn: isLoggedIn
-        })
         if (isLoggedIn) {
           this.state.magic.user.getMetadata()
             .then((metadata) => {
-              this.props.onLoggedIn(metadata.email);
+              this.onLoggedIn(metadata.email);
             });
         }
       })
   }
 
+  createUser = (email) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    };
+    fetch(process.env.REACT_APP_API_URL + "users", requestOptions)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.props.setUser({ "ID": result.id, "Email": email });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+  }
+
+  onLoggedIn = (email) => {
+    fetch(process.env.REACT_APP_API_URL + "users/email/" + email)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          if (result.status === 404) {
+            this.createUser(email);
+          } else {
+            this.props.setUser(result.user);
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+  }
+
   handleLogout = (e) => {
     this.state.magic.user.logout()
       .then(() => {
-        this.setState({
-          isLoggedIn: false
-        })
+        this.props.setUser({})
       },
         (error) => {
-          this.setState({
-            isLoggedIn: true
-          });
+          console.log(error)
         })
   };
 
@@ -82,15 +113,17 @@ class CustomNavbar extends React.Component {
   render() {
     let loginDropdown
     let togler
-    if (this.state.isLoggedIn && this.props.user) {
+    const thisuser = this.props.user
+    if (Object.keys(thisuser).length !== 0) {
       loginDropdown = (
+        
         <UncontrolledDropdown nav>
-          <DropdownToggle className="pr-0" nav>
+          <DropdownToggle nav>
             <Media className="align-items-center">
               <span className="avatar avatar-sm rounded-circle">
                 <img
                   alt="..."
-                  src={this.props.user.AvatarURL}
+                  src={this.props.user.AvatarURL ? this.props.user.AvatarURL : require("assets/img/theme/user.svg")}
                 />
               </span>
               <Media className="ml-2 d-none d-lg-block">
@@ -118,12 +151,12 @@ class CustomNavbar extends React.Component {
       )
       togler = (
         <button className="navbar-toggler" id="navbar_global">
-              <span className="avatar avatar-sm rounded-circle">
-                <img
-                  alt="..."
-                  src={this.props.user.AvatarURL}
-                />
-              </span>
+          <span className="avatar avatar-sm rounded-circle">
+            <img
+              alt="..."
+              src={this.props.user.AvatarURL ? this.props.user.AvatarURL : require("assets/img/theme/user.svg")}
+            />
+          </span>
         </button>
       )
     } else {
@@ -142,11 +175,11 @@ class CustomNavbar extends React.Component {
       )
       togler = (
         <button className="navbar-toggler" id="navbar_global">
-          <span />
-          <span />
+          <span className="navbar-toggler-icon" />
         </button>
       )
     }
+    let user = this.props.user;
     return (
       <>
         <header className="header-global">
@@ -174,7 +207,7 @@ class CustomNavbar extends React.Component {
                 <div className="navbar-collapse-header">
                   <Row>
                     <Col className="collapse-brand" xs="6">
-                      <Link to="/">
+                      <Link to={{ pathname: "/", state: { user } }}>
                         <img
                           alt="..."
                           src={require("assets/img/logo_black.png")}
@@ -182,11 +215,14 @@ class CustomNavbar extends React.Component {
                       </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
-                      {togler}
+                    <button className="navbar-toggler" id="navbar_global">
+                        <span />
+                        <span />
+                      </button>
                     </Col>
                   </Row>
                 </div>
-                <Nav className="align-items-lg-center ml-lg-auto" navbar>
+                <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
                   {loginDropdown}
                 </Nav>
 
@@ -201,4 +237,12 @@ class CustomNavbar extends React.Component {
   }
 }
 
-export default CustomNavbar;
+const mapStateToProps = state => {
+  return state.user;
+};
+
+
+export default connect(
+  mapStateToProps,
+  { setUser }
+)(CustomNavbar);
