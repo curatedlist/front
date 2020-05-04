@@ -13,8 +13,6 @@ import {
     InputGroupText,
     InputGroup,
     Container,
-    Row,
-    Col
 } from "reactstrap";
 
 import { Magic } from 'magic-sdk';
@@ -73,32 +71,32 @@ class UserLogin extends Component {
         } else {
             return (
                 <App>
-                <Container>
-                                <Card className="card-profile bg-secondary shadow border-0">
-                                    <CardBody className="px-lg-5 py-lg-5">
-                                        <Form onSubmit={this.handleLogin} role="form">
-                                            <FormGroup className="mb-3">
-                                                <InputGroup className="input-group-alternative">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="ni ni-email-83" />
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <Input placeholder="Email" type="email" name="email" required="required" />
-                                                </InputGroup>
-                                            </FormGroup>
-                                            <div className="text-center">
-                                                <Button
-                                                    className="my-4"
-                                                    color="primary"
-                                                    type="submit"
-                                                >
-                                                    Sign in
-                          </Button>
-                                            </div>
-                                        </Form>
-                                    </CardBody>
-                                </Card>
+                    <Container>
+                        <Card className="card-profile bg-secondary shadow border-0">
+                            <CardBody className="px-lg-5 py-lg-5">
+                                <Form onSubmit={this.handleLogin} role="form">
+                                    <FormGroup className="mb-3">
+                                        <InputGroup className="input-group-alternative">
+                                            <InputGroupAddon addonType="prepend">
+                                                <InputGroupText>
+                                                    <i className="ni ni-email-83" />
+                                                </InputGroupText>
+                                            </InputGroupAddon>
+                                            <Input placeholder="Email" type="email" name="email" required="required" />
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <div className="text-center">
+                                        <Button
+                                            className="my-4"
+                                            color="primary"
+                                            type="submit"
+                                        >
+                                            Sign in
+                                        </Button>
+                                    </div>
+                                </Form>
+                            </CardBody>
+                        </Card>
                     </Container>
 
                 </App>

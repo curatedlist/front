@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
 // reactstrap components
 import {
@@ -20,7 +19,7 @@ import {
 // core components
 import App from 'App'
 
-class EditProfile extends Component {
+class CreateList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -43,10 +42,8 @@ class EditProfile extends Component {
         fetch(process.env.REACT_APP_API_URL + "users/id/" + data.get("id"), {
             method: 'PUT',
             body: data,
-        }).then(() => {
-            this.props.history.push("/user/" + this.props.user.ID)
         });
-        
+
     };
 
 
@@ -130,4 +127,4 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps
-)(withRouter(EditProfile));
+)(CreateList);
