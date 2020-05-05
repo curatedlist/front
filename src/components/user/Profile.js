@@ -18,6 +18,21 @@ import List from 'components/list/List'
 
 class Profile extends Component {
     render() {
+        var editbutton = () => {
+            const { user, currentUser } = this.props;
+            if (user.ID === currentUser.ID) {
+                return (
+                    <Link to={"/user/" + user.ID + "/edit"}>
+                        <Button
+                            className="mr-4"
+                            color="default"
+                            size="sm" >
+                            Edit
+                        </Button>
+                    </Link>
+                )
+            }
+        }
         var loadItems = () => {
             const { items, user } = this.props;
             let itemsList = [];
@@ -48,7 +63,7 @@ class Profile extends Component {
             }
             return itemsList;
         };
-        let user = this.props.user
+        const user = this.props.user;
         return (
             <div className="px-4">
                 <Row className="justify-content-center">
@@ -66,15 +81,7 @@ class Profile extends Component {
                         lg="4"
                     >
                         <div className="card-profile-actions py-4 mt-lg-0">
-                            <Link to="/profile/edit">
-                                <Button
-                                    className="mr-4"
-                                    color="default"
-                                    size="sm"
-                                >
-                                    Edit
-                                            </Button>
-                            </Link>
+                            {editbutton()}
                             <Button
                                 className="mr-4"
                                 color="primary"
@@ -107,7 +114,9 @@ class Profile extends Component {
 class UserProfile extends Component {
     state = {
         isLoaded: false,
+        error: undefined,
         user: undefined,
+        items: undefined,
     }
 
     componentDidMount() {
@@ -131,11 +140,6 @@ class UserProfile extends Component {
                         });
                     }
                 )
-        } else {
-            this.setState({
-                user: this.props.user,
-                isLoaded: true
-            })
         }
     }
 
@@ -147,7 +151,7 @@ class UserProfile extends Component {
             } else if (!isLoaded) {
                 return <div>Loading...</div>;
             } else {
-                return <Profile user={user} items={items} />
+                return <Profile user={user} items={items} currentUser={this.props.user} />
             }
         }
         return (

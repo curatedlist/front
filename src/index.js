@@ -29,7 +29,7 @@ ReactDOM.render(
           component={UserLogin} />
         <Route exact path="/user/:id"
           render={(props) => <UserProfile {...props} />} />
-        <Route exact path="/profile/edit"
+        <Route exact path="/user/:id/edit"
           render={(props) => <EditProfile {...props} />} />
         <Route exact path="/list/:id"
           render={(props) => <ListPage {...props} />} />
