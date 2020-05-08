@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import store from './redux/store'
 
+import CreateList from 'components/list/CreateList';
 import EditProfile from 'components/user/EditProfile'
 import ExploreLists from './components/list/ExploreLists';
 import Home from './components/home/Home';
@@ -31,6 +32,8 @@ ReactDOM.render(
           render={(props) => <UserProfile {...props} />} />
         <Route exact path="/user/:id/edit"
           render={(props) => <EditProfile {...props} />} />
+        <Route exact path="/list/create"
+          render={(props) => <CreateList {...props} />} />
         <Route exact path="/list/:id"
           render={(props) => <ListPage {...props} />} />
       </Switch>

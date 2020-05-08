@@ -5,13 +5,12 @@ import { connect } from "react-redux";
 import {
     Button,
     Card,
+    CardHeader,
+    CardBody,
     Container,
     FormGroup,
     Form,
     Input,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroup,
     Row,
     Col,
 } from "reactstrap";
@@ -20,16 +19,10 @@ import {
 import App from 'App'
 
 class CreateList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: this.props.user.ID,
-            name: this.props.user.Name,
-            email: this.props.user.Email,
-            avatarURL: this.props.user.AvatarURL,
-        };
-      }
-    
+
+    state = {
+        id: this.props.user.ID
+    }
 
     componentDidMount() {
         document.documentElement.scrollTop = 0;
@@ -39,10 +32,16 @@ class CreateList extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch(process.env.REACT_APP_API_URL + "users/id/" + data.get("id"), {
-            method: 'PUT',
-            body: data,
-        });
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.fromEntries(data)) 
+        }
+        fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions)
+            .then(res => res.json())
+            .then((result) => {
+                this.props.history.push("/list/" + result.id)
+            });
 
     };
 
@@ -51,70 +50,66 @@ class CreateList extends Component {
         return (
             <App>
                 <Container>
-                    <Card className="card-profile shadow mt--300">
-                        <div className="px-4">
-                            <Form onSubmit={this.handleSubmit}>
-                                <Input type="hidden" name="id" value={this.state.id} />
-                                <Row className="justify-content-center">
-                                    <Col className="order-lg-2" lg="3">
-                                        <div className="card-profile-image">
-                                            <img
-                                                alt="..."
-                                                className="rounded-circle"
-                                                src={this.state.avatarURL ? this.state.avatarURL : require("assets/img/theme/user.svg")}
-                                            />
-                                        </div>
+                    <Card className="card-profile bg-secondary shadow">
+                        <Form onSubmit={this.handleSubmit}>
+                            <input type="hidden" name="user_id" value={this.state.id} />
+                            <CardHeader className="bg-white border-0">
+                                <Row className="align-items-center">
+                                    <Col xs="8">
+                                        <h3 className="mb-0">New list</h3>
                                     </Col>
-                                    <Col
-                                        className="order-lg-3 text-lg-right align-self-lg-center"
-                                        lg="4"
-                                    >
-                                        <div className="card-profile-actions py-4 mt-lg-0">
-                                            <Button
-                                                className="mr-4"
-                                                color="primary"
-                                                size="sm"
-                                                type="submit"
-                                            >
-                                                Save
-                                        </Button>
-
-                                        </div>
-                                    </Col>
-                                    <Col className="order-lg-1" lg="4">
+                                    <Col className="text-right" xs="4">
+                                        <Button
+                                            color="primary"
+                                            size="sm"
+                                            type="submit" >
+                                            Save
+                                    </Button>
                                     </Col>
                                 </Row>
-                                <div className="text-center mt-5">
+                            </CardHeader>
+                            <CardBody>
+                                <h6 className="heading-small text-muted mb-4">
+                                    List data
+                                </h6>
+                                <div className="pl-lg-4">
                                     <Row>
-                                        <Col md="6">
+                                        <Col md="12">
                                             <FormGroup>
+                                                <label
+                                                    className="form-control-label"
+                                                    htmlFor="name">
+                                                    Name
+                                                </label>
                                                 <Input
+                                                    className="form-control-alternative"
                                                     name="name"
-                                                    placeholder={this.state.name}
-                                                    defaultValue={this.state.name}
+                                                    placeholder="List name"
                                                     type="text"
                                                 />
                                             </FormGroup>
                                         </Col>
-                                        <Col md="6">
+                                    </Row>
+                                    <Row>
+                                        <Col lg="12">
                                             <FormGroup>
-                                                <InputGroup className="mb-4">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="ni ni-email-83" />
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <Input disabled placeholder={this.state.email} name="email" value={this.state.email} type="email" />
-                                                </InputGroup>
+                                                <label>About this list</label>
+                                                <Input
+                                                    className="form-control-alternative"
+                                                    placeholder="A few words about this list..."
+                                                    name="description"
+                                                    rows="3"
+                                                    defaultValue=""
+                                                    type="textarea"
+                                                />
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                 </div>
-                            </Form>
-                        </div>
+                            </CardBody>
+                        </Form>
                     </Card>
                 </Container>
-
             </App>
         )
     };

@@ -116,7 +116,6 @@ class CustomNavbar extends React.Component {
     const thisuser = this.props.user
     if (Object.keys(thisuser).length !== 0) {
       loginDropdown = (
-        
         <UncontrolledDropdown nav>
           <DropdownToggle nav>
             <Media className="align-items-center">
@@ -225,9 +224,6 @@ class CustomNavbar extends React.Component {
                 <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
                   {loginDropdown}
                 </Nav>
-
-
-
               </UncontrolledCollapse>
             </Container>
           </Navbar>

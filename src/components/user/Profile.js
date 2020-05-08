@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import {
     Button,
     Card,
+    CardHeader,
     Container,
     Row,
     Col,
@@ -33,6 +34,23 @@ class Profile extends Component {
                 )
             }
         }
+        var createbutton = () => {
+            const { user, currentUser } = this.props;
+            if (user.ID === currentUser.ID) {
+                return (
+                    <Link to={"/list/create"}>
+                    <Button
+                        className="btn-icon" 
+                        color="primary" >
+                        <span className="btn-inner--icon">
+                            <i className="ni ni-fat-add" ></i>
+                        </span>
+                        <span className="btn-inner--text">Create new List</span>
+                    </Button>
+                </Link>
+                )
+            }
+        }
         var loadItems = () => {
             const { items, user } = this.props;
             let itemsList = [];
@@ -41,27 +59,43 @@ class Profile extends Component {
                     return <List key={index} item={item} index={index} owner={user} />
                 });
                 return (
-                    <div className="mt-5 py-5 border-top text-center">
-                        <Row className="justify-content-center">
-                            <Col lg="9">
-                                <Table className="align-items-center" responsive>
-                                    <thead className="thead-light">
-                                        <tr>
-                                            <th scope="col">List</th>
-                                            <th scope="col">Collaborators</th>
-                                            <th scope="col" />
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {itemsList}
-                                    </tbody>
-                                </Table>
-                            </Col>
-                        </Row>
-                    </div>
+                    <Card className="shadow">
+                        <CardHeader className="border-0">
+                            <Row className="align-items-center">
+                                <div className="col">
+                                    <h3 className="mb-0">Lists</h3>
+                                </div>
+                                <div className="col text-right">
+                                    {createbutton()}
+                                </div>
+                            </Row>
+                        </CardHeader>
+                        <Table className="align-items-center table-flush" responsive>
+                            <thead className="thead-light">
+                                <tr>
+                                    <th scope="col">List</th>
+                                    <th scope="col">Collaborators</th>
+                                    <th scope="col" />
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {itemsList}
+                            </tbody>
+                        </Table>
+                    </Card>
+                )
+            } else {
+                return (
+                    <Row className="justify-content-center">
+                      <Col lg="9">
+                        <p>
+                          {user.Name} doesn't have any list.... yet
+                        </p>
+                        {createbutton()}
+                      </Col>
+                    </Row>
                 )
             }
-            return itemsList;
         };
         const user = this.props.user;
         return (
@@ -78,18 +112,19 @@ class Profile extends Component {
                     </Col>
                     <Col
                         className="order-lg-3 text-lg-right align-self-lg-center"
-                        lg="4"
-                    >
+                        lg="4" >
                         <div className="card-profile-actions py-4 mt-lg-0">
                             {editbutton()}
+                            <Button className="mr-4" color="primary" size="sm" >
+                                Lists
+                            </Button>
                             <Button
-                                className="mr-4"
-                                color="primary"
+                                className="float-right"
+                                color="info"
                                 size="sm"
                             >
-                                Lists
-                                        </Button>
-
+                                Activity
+                        </Button>
                         </div>
                     </Col>
                     <Col className="order-lg-1" lg="4">
@@ -97,6 +132,10 @@ class Profile extends Component {
                             <div>
                                 <span className="heading">0</span>
                                 <span className="description">Lists</span>
+                            </div>
+                            <div>
+                                <span className="heading">0</span>
+                                <span className="description">Favorites</span>
                             </div>
                         </div>
                     </Col>
@@ -106,7 +145,9 @@ class Profile extends Component {
                         {user.Name}
                     </h3>
                 </div>
-                {loadItems()}
+                <div className="mt-5 py-5 border-top text-center">
+                    {loadItems()}
+                </div>
             </div>
         )
     }

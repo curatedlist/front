@@ -25,7 +25,7 @@ class ExploreLists extends Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
 
-    fetch(process.env.REACT_APP_API_URL + "lists")
+    fetch(process.env.REACT_APP_API_URL + "lists/")
       .then(res => res.json())
       .then(
         (result) => {
