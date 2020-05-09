@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 
 // reactstrap components
 import {
   Button,
   Card,
+  Form,
+  FormGroup,
+  Input,
   Media,
   Table,
   Container,
@@ -61,6 +66,36 @@ class ListItem extends Component {
 }
 
 class ListDetails extends Component {
+  state = {
+    user_id: this.props.user.ID,
+    list_id: this.props.list.ID
+  }
+
+  componentDidMount() {
+    this.setState({
+      user_id: this.props.user.ID,
+      list_id: this.props.list.ID,
+      list: this.props.list
+    })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(data))
+    }
+    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.ID + "/items/", requestOptions)
+      .then(res => res.json())
+      .then((result) => {
+        this.state.list.Items.push({"ID": result.ID, "Name": data.get("name"), "URL": data.get("url"), "PicURL": data.get("pic_url")})
+        this.props.history.push("/list/" + this.props.list.ID)
+      });
+
+  };
+
   render() {
     var loadItems = () => {
       let itemsList = this.props.list.Items.map((item, index) => {
@@ -68,6 +103,63 @@ class ListDetails extends Component {
       });
       return itemsList;
     };
+    var createbutton = () => {
+      const { user, list } = this.props;
+      if (list.Owner.ID === user.ID) {
+        return (
+          <tr>
+            <td colSpan="3">
+              <Form onSubmit={this.handleSubmit}>
+                <input type="hidden" name="user_id" value={this.props.user.ID} />
+                <input type="hidden" name="list_id" value={this.state.list_id} />
+                <Row>
+                  <Col md="4">
+                    <FormGroup>
+                      <Input
+                        className="form-control-alternative"
+                        name="name"
+                        placeholder="Item name"
+                        type="text"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="3">
+                    <FormGroup>
+                      <Input
+                        className="form-control-alternative"
+                        placeholder="URL"
+                        name="url"
+                        type="text"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="3">
+                    <FormGroup>
+                      <Input
+                        className="form-control-alternative"
+                        placeholder="Picture URL"
+                        name="pic_url"
+                        type="text"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="2">
+                    <Button
+                      className="btn-icon"
+                      color="primary"
+                      type="submit" >
+                      <span className="btn-inner--icon">
+                        <i className="ni ni-fat-add" ></i>
+                      </span>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </td>
+          </tr>
+        )
+      }
+    }
     return (
       <Card className="card-profile shadow mt--300">
         <div className="px-4">
@@ -78,7 +170,7 @@ class ListDetails extends Component {
                   <img
                     alt={this.props.list.Owner.Name}
                     className="rounded-circle"
-                    src={this.props.list.Owner.AvatarURL?this.props.list.Owner.AvatarURL:require("assets/img/theme/user.svg")}
+                    src={this.props.list.Owner.AvatarURL ? this.props.list.Owner.AvatarURL : require("assets/img/theme/user.svg")}
                   />
                 </Link>
               </div>
@@ -126,8 +218,10 @@ class ListDetails extends Component {
                   </thead>
                   <tbody>
                     {loadItems()}
+                    {createbutton()}
                   </tbody>
                 </Table>
+
               </Col>
             </Row>
           </div>
@@ -135,8 +229,10 @@ class ListDetails extends Component {
       </Card>
     )
   }
-
 }
+
+const ListDetailsWithRouter = withRouter(ListDetails);
+
 
 class ListPage extends Component {
   state = {
@@ -176,7 +272,7 @@ class ListPage extends Component {
       } else if (!isLoaded) {
         return <div>Loading...</div>;
       } else {
-        return <ListDetails list={list} />
+        return <ListDetailsWithRouter list={list} user={this.props.user} />
       }
     };
     return (
@@ -188,4 +284,11 @@ class ListPage extends Component {
     )
   }
 };
-export default ListPage;
+const mapStateToProps = state => {
+  return state.user;
+};
+
+
+export default connect(
+  mapStateToProps
+)(ListPage);

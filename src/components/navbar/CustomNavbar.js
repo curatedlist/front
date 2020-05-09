@@ -167,7 +167,7 @@ class CustomNavbar extends React.Component {
           >
             <Media className="align-items-center">
               <i className="ni ni-key-25" />
-              <span className="nav-link-inner--text">Login</span>
+              <span className="nav-link-inner--text">Login / Sign up</span>
             </Media>
           </Link>
         </NavItem>

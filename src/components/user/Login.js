@@ -91,7 +91,7 @@ class UserLogin extends Component {
                                             color="primary"
                                             type="submit"
                                         >
-                                            Sign in
+                                            Login / Sign up
                                         </Button>
                                     </div>
                                 </Form>
