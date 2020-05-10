@@ -72,7 +72,7 @@ class EditProfile extends Component {
                                                 <img
                                                     alt="..."
                                                     className="rounded-circle"
-                                                    src={this.state.avatarURL ? this.state.avatarURL : require("assets/img/theme/user.svg")}
+                                                    src={this.state.avatarURL ? this.state.avatarURL : "https://joeschmoe.io/api/v1/" + this.state.email}
                                                 />
                                             </div>
                                         </Col>

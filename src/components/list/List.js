@@ -34,7 +34,7 @@ class List extends Component {
               <img
                 alt={this.props.owner.Name}
                 className="rounded-circle"
-                src={this.props.owner.AvatarURL?this.props.owner.AvatarURL:require("assets/img/theme/user.svg")}
+                src={this.props.owner.AvatarURL?this.props.owner.AvatarURL:"https://joeschmoe.io/api/v1/" + this.props.owner.Email}
               />
             </Link>
             <UncontrolledTooltip

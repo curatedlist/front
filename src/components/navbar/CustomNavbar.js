@@ -59,7 +59,7 @@ class CustomNavbar extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email })
     };
-    fetch(process.env.REACT_APP_API_URL + "users", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "users/", requestOptions)
       .then(res => res.json())
       .then(
         (result) => {
@@ -122,7 +122,7 @@ class CustomNavbar extends React.Component {
               <span className="avatar avatar-sm rounded-circle">
                 <img
                   alt="..."
-                  src={this.props.user.AvatarURL ? this.props.user.AvatarURL : require("assets/img/theme/user.svg")}
+                  src={this.props.user.AvatarURL ? this.props.user.AvatarURL :  "https://joeschmoe.io/api/v1/" + this.props.user.Email}
                 />
               </span>
               <Media className="ml-2 d-none d-lg-block">
@@ -153,7 +153,7 @@ class CustomNavbar extends React.Component {
           <span className="avatar avatar-sm rounded-circle">
             <img
               alt="..."
-              src={this.props.user.AvatarURL ? this.props.user.AvatarURL : require("assets/img/theme/user.svg")}
+              src={this.props.user.AvatarURL ? this.props.user.AvatarURL : "https://joeschmoe.io/api/v1/" + this.props.user.Email}
             />
           </span>
         </button>

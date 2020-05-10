@@ -194,7 +194,7 @@ class ListDetails extends Component {
                   <img
                     alt={this.props.list.Owner.Name}
                     className="rounded-circle"
-                    src={this.props.list.Owner.AvatarURL ? this.props.list.Owner.AvatarURL : require("assets/img/theme/user.svg")}
+                    src={this.props.list.Owner.AvatarURL ? this.props.list.Owner.AvatarURL : "https://joeschmoe.io/api/v1/" + this.props.list.Owner.Email}
                   />
                 </Link>
               </div>

@@ -106,7 +106,7 @@ class Profile extends Component {
                             <img
                                 alt="..."
                                 className="rounded-circle"
-                                src={user.AvatarURL ? user.AvatarURL : require("assets/img/theme/user.svg")}
+                                src={user.AvatarURL ? user.AvatarURL : "https://joeschmoe.io/api/v1/" + user.Email}
                             />
                         </div>
                     </Col>
