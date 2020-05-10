@@ -21,6 +21,30 @@ import {
 import App from 'App';
 
 class ListItem extends Component {
+
+  componentDidMount() {
+    this.setState({
+      list: this.props.list
+    })
+  }
+
+
+  deleteItem = (event) => {
+    event.preventDefault();
+    const itemId = event.currentTarget.getAttribute('data-id');
+    const requestOptions = {
+      method: 'PATCH',
+    }
+    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.ID + "/items/" + itemId + "/delete", requestOptions)
+      .then(res => res.json())
+      .then((result) => {
+        const index = this.state.list.Items.findIndex( item => item.ID == result.item.ID)
+        this.state.list.Items[index] = result.item
+        this.props.history.push("/list/" + this.props.list.ID)
+      });
+
+  };
+
   render() {
     return (
       <>
@@ -58,12 +82,20 @@ class ListItem extends Component {
                 <i className="ni ni-like-2" />
               </span>
             </Button>
+            <Button className="btn-icon btn-2" color="danger" type="button" onClick={this.deleteItem} data-id={this.props.item.ID}>
+              <span className="btn-inner--icon">
+                <i className="ni ni-fat-delete" />
+              </span>
+            </Button>
           </td>
         </tr>
       </>
     )
   }
 }
+
+const ListItemWithRouter = withRouter(ListItem);
+
 
 class ListDetails extends Component {
   state = {
@@ -90,7 +122,7 @@ class ListDetails extends Component {
     fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.ID + "/items/", requestOptions)
       .then(res => res.json())
       .then((result) => {
-        this.state.list.Items.push({"ID": result.ID, "Name": data.get("name"), "URL": data.get("url"), "PicURL": data.get("pic_url")})
+        this.state.list.Items.push(result.item)
         this.props.history.push("/list/" + this.props.list.ID)
       });
 
@@ -99,7 +131,9 @@ class ListDetails extends Component {
   render() {
     var loadItems = () => {
       let itemsList = this.props.list.Items.map((item, index) => {
-        return <ListItem key={index} item={item} index={index} />
+        if (!item.Deleted) {
+          return <ListItemWithRouter key={index} item={item} index={index} list={this.props.list} />
+        }
       });
       return itemsList;
     };
@@ -113,7 +147,7 @@ class ListDetails extends Component {
                 <input type="hidden" name="user_id" value={this.props.user.ID} />
                 <input type="hidden" name="list_id" value={this.state.list_id} />
                 <Row>
-                  <Col md="4">
+                  <Col md="5">
                     <FormGroup>
                       <Input
                         className="form-control-alternative"
@@ -123,22 +157,12 @@ class ListDetails extends Component {
                       />
                     </FormGroup>
                   </Col>
-                  <Col md="3">
+                  <Col md="5">
                     <FormGroup>
                       <Input
                         className="form-control-alternative"
                         placeholder="URL"
                         name="url"
-                        type="text"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="3">
-                    <FormGroup>
-                      <Input
-                        className="form-control-alternative"
-                        placeholder="Picture URL"
-                        name="pic_url"
                         type="text"
                       />
                     </FormGroup>
