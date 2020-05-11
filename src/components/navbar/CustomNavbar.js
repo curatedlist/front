@@ -63,7 +63,7 @@ class CustomNavbar extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          this.props.setUser({ "ID": result.id, "Email": email });
+          this.props.setUser({ "id": result.id, "email": email });
         },
         (error) => {
           console.log(error)
@@ -113,8 +113,8 @@ class CustomNavbar extends React.Component {
   render() {
     let loginDropdown
     let togler
-    const thisuser = this.props.user
-    if (Object.keys(thisuser).length !== 0) {
+    const { user } = this.props
+    if (Object.keys(user).length !== 0) {
       loginDropdown = (
         <UncontrolledDropdown nav>
           <DropdownToggle nav>
@@ -122,12 +122,12 @@ class CustomNavbar extends React.Component {
               <span className="avatar avatar-sm rounded-circle">
                 <img
                   alt="..."
-                  src={this.props.user.AvatarURL ? this.props.user.AvatarURL :  "https://joeschmoe.io/api/v1/" + this.props.user.Email}
+                  src={user.avatar_url ? user.avatar_url :  "https://joeschmoe.io/api/v1/" + user.email}
                 />
               </span>
               <Media className="ml-2 d-none d-lg-block">
                 <span className="mb-0 text-sm font-weight-bold">
-                  {this.props.user.Name}
+                  {user.name}
                 </span>
               </Media>
             </Media>
@@ -136,7 +136,7 @@ class CustomNavbar extends React.Component {
             <DropdownItem className="noti-title" header tag="div">
               <h6 className="text-overflow m-0">Welcome!</h6>
             </DropdownItem>
-            <DropdownItem to={"/user/" + this.props.user.ID} tag={Link}>
+            <DropdownItem to={"/user/" + user.id} tag={Link}>
               <i className="ni ni-single-02" />
               <span>My profile</span>
             </DropdownItem>
@@ -153,7 +153,7 @@ class CustomNavbar extends React.Component {
           <span className="avatar avatar-sm rounded-circle">
             <img
               alt="..."
-              src={this.props.user.AvatarURL ? this.props.user.AvatarURL : "https://joeschmoe.io/api/v1/" + this.props.user.Email}
+              src={user.avatar_url ? user.avatar_url : "https://joeschmoe.io/api/v1/" + user.email}
             />
           </span>
         </button>
@@ -178,7 +178,6 @@ class CustomNavbar extends React.Component {
         </button>
       )
     }
-    let user = this.props.user;
     return (
       <>
         <header className="header-global">
@@ -190,7 +189,7 @@ class CustomNavbar extends React.Component {
             <Container>
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <img
-                  alt="..."
+                  alt="Curatedli.st a collaborative curated content"
                   src={require("assets/img/logo.png")}
                 />
               </NavbarBrand>

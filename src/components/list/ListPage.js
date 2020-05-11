@@ -28,51 +28,47 @@ class ListItem extends Component {
     })
   }
 
-
   deleteItem = (event) => {
     event.preventDefault();
     const itemId = event.currentTarget.getAttribute('data-id');
     const requestOptions = {
       method: 'PATCH',
     }
-    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.ID + "/items/" + itemId + "/delete", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.id + "/items/" + itemId + "/delete", requestOptions)
       .then(res => res.json())
       .then((result) => {
-        const index = this.state.list.Items.findIndex( item => item.ID == result.item.ID)
-        this.state.list.Items[index] = result.item
-        this.props.history.push("/list/" + this.props.list.ID)
+        const index = this.state.list.items.findIndex( item => item.id === result.item.id)
+        this.state.list.items[index] = result.item
+        this.props.history.push("/list/" + this.props.list.id)
       });
-
   };
 
   render() {
+    const { item, key } = this.props;
     return (
       <>
         <tr>
           <th scope="row">
             <Media className="align-items-center">
-              {this.props.index}
+              {key}
             </Media>
           </th>
           <td>
             <Media className="align-items-center">
               <a
                 className="avatar rounded-circle mr-3"
-                href={this.props.item.URL}
-              >
+                href={item.url} >
                 <img
                   className="avatar"
-                  alt={this.props.item.Name}
-                  src={this.props.item.PicURL}
-                />
+                  alt={item.name}
+                  src={item.pic_url} />
               </a>
               <Media>
                 <span className="mb-0 text-sm">
-                  <a href={this.props.item.URL}>
-                    {this.props.item.Name}
+                  <a href={item.url}>
+                    {item.name}
                   </a>
                 </span>
-
               </Media>
             </Media>
           </td>
@@ -82,7 +78,7 @@ class ListItem extends Component {
                 <i className="ni ni-like-2" />
               </span>
             </Button>
-            <Button className="btn-icon btn-2" color="danger" type="button" onClick={this.deleteItem} data-id={this.props.item.ID}>
+            <Button className="btn-icon btn-2" color="danger" type="button" onClick={this.deleteItem} data-id={item.id}>
               <span className="btn-inner--icon">
                 <i className="ni ni-fat-delete" />
               </span>
@@ -96,22 +92,23 @@ class ListItem extends Component {
 
 const ListItemWithRouter = withRouter(ListItem);
 
-
 class ListDetails extends Component {
+  //TODO: remove
   state = {
-    user_id: this.props.user.ID,
-    list_id: this.props.list.ID
+    user_id: this.props.user.id,
+    list_id: this.props.list.id,
+    list: this.props.list
   }
 
   componentDidMount() {
     this.setState({
-      user_id: this.props.user.ID,
-      list_id: this.props.list.ID,
+      user_id: this.props.user.id,
+      list_id: this.props.list.id,
       list: this.props.list
     })
   }
 
-  handleSubmit = (event) => {
+  addItem = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
     const requestOptions = {
@@ -119,32 +116,34 @@ class ListDetails extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Object.fromEntries(data))
     }
-    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.ID + "/items/", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "lists/" + this.state.list_id + "/items/", requestOptions)
       .then(res => res.json())
       .then((result) => {
-        this.state.list.Items.push(result.item)
-        this.props.history.push("/list/" + this.props.list.ID)
+        this.state.list.items.push(result.item)
+        this.props.history.push("/list/" + this.state.list_id)
       });
 
   };
 
   render() {
     var loadItems = () => {
-      let itemsList = this.props.list.Items.map((item, index) => {
-        if (!item.Deleted) {
-          return <ListItemWithRouter key={index} item={item} index={index} list={this.props.list} />
+      let itemsList = this.props.list.items.map((item, index) => {
+        if (!item.deleted) {
+          return <ListItemWithRouter key={index} item={item} list={this.state.list} />
+        } else {
+          return <></>
         }
       });
       return itemsList;
     };
     var createbutton = () => {
       const { user, list } = this.props;
-      if (list.Owner.ID === user.ID) {
+      if (list.owner.id === user.id) {
         return (
           <tr>
             <td colSpan="3">
-              <Form onSubmit={this.handleSubmit}>
-                <input type="hidden" name="user_id" value={this.props.user.ID} />
+              <Form onSubmit={this.addItem}>
+                <input type="hidden" name="user_id" value={this.props.user.id} />
                 <input type="hidden" name="list_id" value={this.state.list_id} />
                 <Row>
                   <Col md="5">
@@ -153,8 +152,7 @@ class ListDetails extends Component {
                         className="form-control-alternative"
                         name="name"
                         placeholder="Item name"
-                        type="text"
-                      />
+                        type="text" />
                     </FormGroup>
                   </Col>
                   <Col md="5">
@@ -163,8 +161,7 @@ class ListDetails extends Component {
                         className="form-control-alternative"
                         placeholder="URL"
                         name="url"
-                        type="text"
-                      />
+                        type="text" />
                     </FormGroup>
                   </Col>
                   <Col md="2">
@@ -184,29 +181,27 @@ class ListDetails extends Component {
         )
       }
     }
+    const { list } = this.state;
     return (
       <Card className="card-profile shadow mt--300">
         <div className="px-4">
           <Row className="justify-content-center">
             <Col className="order-lg-2" lg="3">
               <div className="card-profile-image justify-content-center">
-                <Link to={"/user/" + this.props.list.Owner.ID}>
+                <Link to={"/user/" + list.owner.id}>
                   <img
-                    alt={this.props.list.Owner.Name}
+                    alt={list.owner.name}
                     className="rounded-circle"
-                    src={this.props.list.Owner.AvatarURL ? this.props.list.Owner.AvatarURL : "https://joeschmoe.io/api/v1/" + this.props.list.Owner.Email}
-                  />
+                    src={list.owner.avatar_url ? list.owner.avatar_url : "https://joeschmoe.io/api/v1/" + list.owner.email} />
                 </Link>
               </div>
             </Col>
             <Col
               className="order-lg-3 text-lg-right align-self-lg-center"
-              lg="4"
-            >
+              lg="4" >
               <div className="card-profile-actions py-4 mt-lg-0">
                 <Button className="btn-icon btn-3" color="primary" type="button"
-                  onClick={e => e.preventDefault()}
-                >
+                  onClick={e => e.preventDefault()} >
                   <span className="btn-inner--icon">
                     <i className="ni ni-like-2" />
                   </span>
@@ -217,7 +212,7 @@ class ListDetails extends Component {
             <Col className="order-lg-1" lg="4">
               <div className="card-profile-stats d-flex justify-content-center">
                 <div>
-                  <span className="heading">22</span>
+                  <span className="heading">0</span>
                   <span className="description">Likes</span>
                 </div>
               </div>
@@ -225,8 +220,8 @@ class ListDetails extends Component {
           </Row>
 
           <div className="text-center mt-5">
-            <h3 className="mb-0">{this.props.list.Name}</h3>
-            {this.props.list.Description}
+            <h3 className="mb-0">{list.name}</h3>
+            {list.description}
           </div>
 
           <div className="mt-5 py-5 text-center">
@@ -257,7 +252,6 @@ class ListDetails extends Component {
 
 const ListDetailsWithRouter = withRouter(ListDetails);
 
-
 class ListPage extends Component {
   state = {
     error: null,
@@ -285,7 +279,6 @@ class ListPage extends Component {
           });
         }
       )
-
   }
 
   render() {
@@ -296,7 +289,7 @@ class ListPage extends Component {
       } else if (!isLoaded) {
         return <div>Loading...</div>;
       } else {
-        return <ListDetailsWithRouter list={list} user={this.props.user} />
+        return <ListDetailsWithRouter key={list.id} list={list} user={this.props.user} />
       }
     };
     return (
@@ -311,7 +304,6 @@ class ListPage extends Component {
 const mapStateToProps = state => {
   return state.user;
 };
-
 
 export default connect(
   mapStateToProps

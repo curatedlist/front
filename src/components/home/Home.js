@@ -20,7 +20,7 @@ function BigHero() {
         <div className="mb-6 mb-lg-0 col-lg-6">
           <h1 className="display-3 text-white">
             Curatedli.st
-        <span className="text-white">Collaborative Curated Content</span>
+            <span className="text-white">Collaborative Curated Content</span>
           </h1>
           <p className="lead text-white mt-4">Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content.</p>
           <Link to="/all">
@@ -28,7 +28,7 @@ function BigHero() {
               className="btn-white mt-4"
               color="default">
               Explore Lists
-                    </Button>
+            </Button>
           </Link>
         </div>
         <div className="mb-lg-auto col-lg-5">
@@ -36,8 +36,7 @@ function BigHero() {
             <img
               alt="..."
               className="img-center img-fluid"
-              src={require("assets/img/theme/checklist.svg")}
-            />
+              src={require("assets/img/theme/checklist.svg")} />
           </div>
         </div>
       </div>
@@ -53,8 +52,7 @@ function Features() {
           <img
             alt="..."
             className="img-fluid floating"
-            src={require("assets/img/theme/review.svg")}
-          />
+            src={require("assets/img/theme/review.svg")} />
         </Col>
         <Col className="order-md-1" md="6">
           <div className="pr-md-5">
@@ -64,15 +62,14 @@ function Features() {
             <h3>Awesome features</h3>
             <p>
               This is where curated content starts.
-              </p>
+            </p>
             <ul className="list-unstyled mt-5">
               <li className="py-2">
                 <div className="d-flex align-items-center">
                   <div>
                     <Badge
                       className="badge-circle mr-3"
-                      color="success"
-                    >
+                      color="success" >
                       <i className="ni ni-bullet-list-67" />
                     </Badge>
                   </div>
@@ -88,8 +85,7 @@ function Features() {
                   <div>
                     <Badge
                       className="badge-circle mr-3"
-                      color="success"
-                    >
+                      color="success" >
                       <i className="ni ni-world" />
                     </Badge>
                   </div>
@@ -103,8 +99,7 @@ function Features() {
                   <div>
                     <Badge
                       className="badge-circle mr-3"
-                      color="success"
-                    >
+                      color="success" >
                       <i className="ni ni-send" />
                     </Badge>
                   </div>

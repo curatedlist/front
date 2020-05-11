@@ -18,7 +18,7 @@ class ExploreLists extends Component {
   state = {
     error: null,
     isLoaded: false,
-    items: []
+    lists: []
   }
 
   componentDidMount() {
@@ -31,7 +31,7 @@ class ExploreLists extends Component {
         (result) => {
           this.setState({
             isLoaded: true,
-            items: result.lists
+            lists: result.lists
           });
         },
         (error) => {
@@ -45,15 +45,15 @@ class ExploreLists extends Component {
   }
 
   render() {
-    var loadItems = () => {
-      const { error, isLoaded, items } = this.state;
+    var loadLists = () => {
+      const { error, isLoaded, lists } = this.state;
       if (error) {
         return <tr><td colSpan="3">Error: {error.message}</td></tr>;
       } else if (!isLoaded) {
         return <tr><td colSpan="3">Loading...</td></tr>;
       } else {
-        let itemsList = items.map((item, index) => {
-          return <List key={index} item={item} index={index} owner={item.Owner} />
+        let itemsList = lists.map((list, index) => {
+          return <List list={list} key={index} />
         });
         return itemsList;
       }
@@ -78,7 +78,7 @@ class ExploreLists extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {loadItems()}
+                        {loadLists()}
                       </tbody>
                     </Table>
                   </Col>

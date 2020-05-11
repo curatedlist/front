@@ -32,8 +32,7 @@ class Footer extends Component {
                   color="github"
                   href="https://github.com/curatedlist"
                   id="tooltip495507257"
-                  target="_blank"
-                >
+                  target="_blank" >
                   <span className="btn-inner--icon">
                     <i className="fa fa-github" />
                   </span>
@@ -51,8 +50,7 @@ class Footer extends Component {
                   <a
                     href="https://curatedli.st"
                     target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                    rel="noopener noreferrer" >
                     Curatedli.st
                   </a>
                   .
@@ -64,8 +62,7 @@ class Footer extends Component {
                     <NavLink
                       href="https://curatedli.st"
                       target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                      rel="noopener noreferrer" >
                       curatedli.st
                     </NavLink>
                   </NavItem>

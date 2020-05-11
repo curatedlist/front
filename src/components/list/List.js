@@ -17,9 +17,9 @@ class List extends Component {
             <i className="avatar rounded-circle mr-3 fa fa-list-ol fa-2x"></i>
             <Media>
               <Link
-                to={"/list/" + this.props.item.ID}
-                className="mb-0 text-sm">
-                {this.props.item.Name}
+                to={"/list/" + this.props.list.id}
+                className="mb-0 text-sm" >
+                {this.props.list.name}
               </Link>
             </Media>
           </Media>
@@ -27,21 +27,21 @@ class List extends Component {
         <td>
           <div className="avatar-group">
             <Link
-              id={"tooltip" + this.props.owner.ID}
+              id={"tooltip" + this.props.list.owner.id}
               className="avatar avatar-sm"
-              to={"/user/" + this.props.owner.ID}
+              to={"/user/" + this.props.list.owner.id}
             >
               <img
-                alt={this.props.owner.Name}
+                alt={this.props.list.owner.name}
                 className="rounded-circle"
-                src={this.props.owner.AvatarURL?this.props.owner.AvatarURL:"https://joeschmoe.io/api/v1/" + this.props.owner.Email}
+                src={this.props.list.owner.avatar_url ? this.props.list.owner.avatar_url : "https://joeschmoe.io/api/v1/" + this.props.list.owner.email}
               />
             </Link>
             <UncontrolledTooltip
               delay={0}
-              target={"tooltip" + this.props.owner.ID}
+              target={"tooltip" + this.props.list.owner.id}
             >
-              {this.props.owner.Name}
+              {this.props.list.owner.name}
             </UncontrolledTooltip>
           </div>
         </td>
