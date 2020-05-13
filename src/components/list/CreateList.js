@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from "react-redux";
+import { connect } from "react-redux"
 
 // reactstrap components
 import {
@@ -13,10 +13,13 @@ import {
   Input,
   Row,
   Col,
-} from "reactstrap";
+} from "reactstrap"
 
 // core components
 import App from 'App'
+
+// Services & Helpes
+import { listService } from '_services/list.service'
 
 class CreateList extends Component {
 
@@ -29,19 +32,10 @@ class CreateList extends Component {
     document.scrollingElement.scrollTop = 0;
   }
 
-  handleSubmit = (event) => {
+  createList = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(data))
-    }
-    fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions)
-      .then(res => res.json())
-      .then((result) => {
-        this.props.history.push("/list/" + result.id)
-      });
+    listService.create(data).then(result => this.props.history.push("/list/" + result.id));
   };
 
 
@@ -50,7 +44,7 @@ class CreateList extends Component {
       <App>
         <Container>
           <Card className="card-profile bg-secondary shadow">
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.createList}>
               <input type="hidden" name="user_id" value={this.props.user.id} />
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">

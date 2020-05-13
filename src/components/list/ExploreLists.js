@@ -13,6 +13,7 @@ import {
 // core components
 import App from 'App';
 import List from 'components/list/List'
+import { listService } from '_services/list.service';
 
 class ExploreLists extends Component {
   state = {
@@ -24,40 +25,23 @@ class ExploreLists extends Component {
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-
-    fetch(process.env.REACT_APP_API_URL + "lists/")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            lists: result.lists
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-
+    listService.getAll().then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          lists: result.lists
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        })
+      })
   }
 
   render() {
-    var loadLists = () => {
-      const { error, isLoaded, lists } = this.state;
-      if (error) {
-        return <tr><td colSpan="3">Error: {error.message}</td></tr>;
-      } else if (!isLoaded) {
-        return <tr><td colSpan="3">Loading...</td></tr>;
-      } else {
-        let itemsList = lists.map((list, index) => {
-          return <List list={list} key={index} />
-        });
-        return itemsList;
-      }
-    };
+    const { error, isLoaded, lists } = this.state;
     return (
       <App>
         <Container>
@@ -69,25 +53,20 @@ class ExploreLists extends Component {
               <div className="mt-5 py-5 text-center">
                 <Row className="justify-content-center">
                   <Col lg="9">
-                    <Table className="align-items-center" responsive>
-                      <thead className="thead-light">
-                        <tr>
-                          <th scope="col">List</th>
-                          <th scope="col">Owner</th>
-                          <th scope="col" />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {loadLists()}
-                      </tbody>
-                    </Table>
+                    {error && <em>Error: {error.message}</em>}
+                    {!isLoaded && <em>Loading...</em>}
+                    {lists.length != 0 &&
+                      lists.map((list, index) =>
+                        <List list={list} key={index} />
+                      )
+                    }
                   </Col>
                 </Row>
               </div>
             </div>
           </Card>
         </Container>
-      </App>
+      </App >
     )
   }
 };
