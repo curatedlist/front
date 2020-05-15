@@ -58,30 +58,17 @@ class Profile extends Component {
           return <List list={list} key={index} />
         });
         return (
-          <Card className="shadow">
-            <CardHeader className="border-0">
-              <Row className="align-items-center">
-                <div className="col">
-                  <h3 className="mb-0">Lists</h3>
-                </div>
-                <div className="col text-right">
-                  {createbutton()}
-                </div>
-              </Row>
-            </CardHeader>
-            <Table className="align-items-center table-flush" responsive>
-              <thead className="thead-light">
-                <tr>
-                  <th scope="col">List</th>
-                  <th scope="col">Collaborators</th>
-                  <th scope="col" />
-                </tr>
-              </thead>
-              <tbody>
-                {result}
-              </tbody>
-            </Table>
-          </Card>
+          <>
+            <div className="px-4">
+              <div className="mt-5 py-5 ">
+                <Row className="justify-content-center">
+                  <Col lg="9">
+                    {result}
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          </>
         )
       } else {
         return (
