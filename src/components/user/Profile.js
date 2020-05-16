@@ -114,11 +114,11 @@ class Profile extends Component {
           <Col className="order-lg-1" lg="4">
             <div className="card-profile-stats d-flex justify-content-center">
               <div>
-                <span className="heading">0</span>
+                <span className="heading">{user.lists.length}</span>
                 <span className="description">Lists</span>
               </div>
               <div>
-                <span className="heading">0</span>
+                <span className="heading">{user.favs.length}</span>
                 <span className="description">Favorites</span>
               </div>
             </div>

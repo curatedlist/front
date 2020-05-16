@@ -268,7 +268,7 @@ class ListDetails extends Component {
             <Col className="order-lg-1" lg="4">
               <div className="card-profile-stats d-flex justify-content-center">
                 <div>
-                  <span className="heading">0</span>
+                  <span className="heading">{list.favs}</span>
                   <span className="description">Likes</span>
                 </div>
               </div>
