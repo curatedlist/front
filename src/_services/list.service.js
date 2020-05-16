@@ -16,10 +16,25 @@ function create(data) {
     });
 }
 
-function getAll() {
-  return fetch(process.env.REACT_APP_API_URL + "lists/")
+function getAll(filter) {
+  let url = new URL(process.env.REACT_APP_API_URL + "lists/")
+  url.search = new URLSearchParams({ 'filter_by': filter }).toString();
+  return fetch(url)
     .then(res => res.json())
     .then((result) => {
       return result
     })
+}
+
+function fav(list_id, user_id) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' }
+  }
+  return fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav?user_id=" + user_id, requestOptions)
+    .then(res => res.json())
+    .then((result) => {
+      return result
+    });
+
 }
