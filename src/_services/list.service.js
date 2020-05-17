@@ -1,6 +1,7 @@
 export const listService = {
   create,
-  getAll
+  getAll,
+  fav
 }
 
 function create(data) {

@@ -3,14 +3,12 @@ import classnames from 'classnames';
 
 // reactstrap components
 import {
-  Card,
   Container,
   Row,
   Col,
   Nav,
   NavItem,
   NavLink,
-  CardBody,
   TabPane,
   TabContent
 } from "reactstrap";
@@ -143,8 +141,6 @@ class ExploreLists extends Component {
               </NavItem>
             </Nav>
           </div>
-          <Card className="shadow">
-            <CardBody>
               <TabContent activeTab={"tabs" + this.state.tabs}>
                 <TabPane tabId="tabs1">
                   <div className="px-4">
@@ -153,7 +149,7 @@ class ExploreLists extends Component {
                         <Col lg="9">
                           {error && <em>Error: {error.message}</em>}
                           {!isLoaded && <em>Loading...</em>}
-                          {listsInteresting.length != 0 &&
+                          {listsInteresting.length !== 0 &&
                             listsInteresting.map((list, index) =>
                               <List list={list} key={index} />
                             )
@@ -170,7 +166,7 @@ class ExploreLists extends Component {
                         <Col lg="9">
                           {error && <em>Error: {error.message}</em>}
                           {!isLoaded && <em>Loading...</em>}
-                          {listsTrending.length != 0 &&
+                          {listsTrending.length !== 0 &&
                             listsTrending.map((list, index) =>
                               <List list={list} key={index} />
                             )
@@ -187,7 +183,7 @@ class ExploreLists extends Component {
                         <Col lg="9">
                           {error && <em>Error: {error.message}</em>}
                           {!isLoaded && <em>Loading...</em>}
-                          {listsNewest.length != 0 &&
+                          {listsNewest.length !== 0 &&
                             listsNewest.map((list, index) =>
                               <List list={list} key={index} />
                             )
@@ -198,8 +194,6 @@ class ExploreLists extends Component {
                   </div>
                 </TabPane>
               </TabContent>
-            </CardBody>
-          </Card>
         </Container>
       </App >
     )

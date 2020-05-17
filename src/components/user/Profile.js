@@ -6,16 +6,17 @@ import { Link } from "react-router-dom";
 import {
   Button,
   Card,
-  CardHeader,
   Container,
   Row,
-  Col,
-  Table
+  Col
 } from "reactstrap";
 
 // core components
 import App from 'App'
 import List from 'components/list/List'
+
+// Services & Helpes
+import { userService } from '_services/user.service';
 
 class Profile extends Component {
   render() {
@@ -23,7 +24,7 @@ class Profile extends Component {
     var editbutton = () => {
       if (user.id === currentUser.id) {
         return (
-          <Link to={"/user/" + user.id + "/edit"}>
+          <Link to={"/by/" + user.username + "/edit"}>
             <Button
               className="mr-4"
               color="default"
@@ -128,6 +129,10 @@ class Profile extends Component {
           <h3>
             {user.name}
           </h3>
+          <div className="h6 font-weight-300">
+            <i className="ni location_pin mr-2" />
+            {user.bio.substring(0, 500) + '...'}
+          </div>
         </div>
         <div className="mt-5 py-5 border-top text-center">
           {loadLists()}
@@ -144,9 +149,27 @@ class UserProfile extends Component {
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    if (this.props.match.params.id !== undefined) {
-      fetch(process.env.REACT_APP_API_URL + "users/id/" + this.props.match.params.id)
-        .then(res => res.json())
+    let id = this.props.match.params.id
+    let username = this.props.match.params.username
+    if (id !== undefined) {
+      userService.getById(id)
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded: true,
+              user: result.user,
+              lists: result.user.lists
+            });
+          },
+          (error) => {
+            this.setState({
+              isLoaded: true,
+              error
+            });
+          }
+        )
+    } else if (username !== undefined) {
+      userService.getByUsername(username)
         .then(
           (result) => {
             this.setState({

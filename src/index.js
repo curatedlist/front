@@ -28,9 +28,9 @@ ReactDOM.render(
           component={ExploreLists} />
         <Route exact path="/login"
           component={UserLogin} />
-        <Route exact path="/user/:id"
+        <Route exact path="/by/:username"
           render={(props) => <UserProfile {...props} />} />
-        <Route exact path="/user/:id/edit"
+        <Route exact path="/by/:username/edit"
           render={(props) => <EditProfile {...props} />} />
         <Route exact path="/list/create"
           render={(props) => <CreateList {...props} />} />

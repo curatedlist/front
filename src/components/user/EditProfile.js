@@ -36,22 +36,27 @@ class EditProfile extends Component {
     const data = new FormData(event.target);
     fetch(process.env.REACT_APP_API_URL + "users/id/" + this.state.user.id, {
       method: 'PUT',
-      body: data,
+      body: JSON.stringify(Object.fromEntries(data)),
+      headers: { 'Content-Type': 'application/json' }
     }).then(() => {
       var newUser = {};
       data.forEach((value, key) => { newUser[key] = value });
       this.props.setUser({ ...this.props.user, ...newUser });
-      this.props.history.push("/user/" + this.state.user.id)
+      this.props.history.push("/by/" + this.state.user.username)
     });
 
   };
 
   render() {
-    if (Object.keys(this.state.user).length === 0 || this.state.user.id !== parseInt(this.props.match.params.id)) {
+    console.log(this.state.user.username)
+    console.log(this.props.match.params.username)
+    console.log(Object.keys(this.state.user).length === 0)
+    console.log(this.state.user.username !== parseInt(this.props.match.params.username))
+    if (Object.keys(this.state.user).length === 0 || this.state.user.username !== this.props.match.params.username) {
       return (
         <>
           <Redirect
-            to={"/user/" + this.props.match.params.id}
+            to={"/by/" + this.props.match.params.username}
           />
         </>
       );
@@ -90,7 +95,7 @@ class EditProfile extends Component {
                   </Row>
                   <div className="text-center mt-5">
                     <Row>
-                      <Col md="6">
+                      <Col md="4">
                         <FormGroup>
                           <Input
                             name="name"
@@ -99,7 +104,16 @@ class EditProfile extends Component {
                             type="text" />
                         </FormGroup>
                       </Col>
-                      <Col md="6">
+                      <Col md="4">
+                        <FormGroup>
+                          <Input
+                            name="username"
+                            placeholder={this.state.user.username}
+                            defaultValue={this.state.user.username}
+                            type="text" />
+                        </FormGroup>
+                      </Col>
+                      <Col md="4">
                         <FormGroup>
                           <InputGroup className="mb-4">
                             <InputGroupAddon addonType="prepend">
@@ -109,6 +123,20 @@ class EditProfile extends Component {
                             </InputGroupAddon>
                             <Input disabled placeholder={this.state.user.email} name="email" value={this.state.user.email} type="email" />
                           </InputGroup>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <Input
+                            className="form-control-alternative"
+                            placeholder="A few words about this you..."
+                            name="bio"
+                            rows="2"
+                            type="textarea"
+                            defaultValue={this.state.user.bio}
+                          />
                         </FormGroup>
                       </Col>
                     </Row>

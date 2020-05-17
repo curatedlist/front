@@ -51,12 +51,12 @@ class ListItem extends Component {
         <Card className="mb-4 shadow">
           <CardBody>
             <Row className="align-items-center">
-              <Col sm="2">
-                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+              <Col sm="1" className="pl-0">
+                <div className="icon icon-shape bg-default text-white rounded-circle shadow">
                   {index}
                 </div>
               </Col>
-              <Col sm="2">
+              <Col sm="2" className="pr-0">
                 <Media className="align-items-center">
                   <a
                     className="avatar rounded-circle mr-3"
@@ -68,11 +68,11 @@ class ListItem extends Component {
                   </a>
                 </Media>
               </Col>
-              <Col sm="6">
+              <Col sm="7">
                 <a
                   className=""
                   href={item.url} >
-                  <CardTitle className="h4 font-weight-bold mb-0 ">
+                  <CardTitle className="h5 font-weight-bold mb-0 ">
                     {item.name}
                   </CardTitle>
                 </a>
@@ -80,7 +80,7 @@ class ListItem extends Component {
                   {item.description.substring(0, 100) + '...'}
                 </p>
               </Col>
-              <Col sm="2">
+              <Col sm="2" className="pl-0">
                 {/* 
                 <Button className="btn-icon btn-2 mt-4" color="default" type="button">
                   <span className="btn-inner--icon">
@@ -227,7 +227,7 @@ class ListDetails extends Component {
           <Row className="justify-content-center">
             <Col className="order-lg-2" lg="3">
               <div className="card-profile-image justify-content-center">
-                <Link to={"/user/" + list.owner.id}>
+                <Link to={"/by/" + list.owner.username}>
                   <img
                     alt={list.owner.name}
                     className="rounded-circle"
@@ -239,7 +239,7 @@ class ListDetails extends Component {
               className="order-lg-3 text-lg-right align-self-lg-center"
               lg="4" >
               <div className="card-profile-actions py-4 mt-lg-0">
-                {Object.keys(user).length !== 0 && user.favs.length !== 0 && !user.favs.includes(list.id) &&
+                {Object.keys(user).length !== 0 && !user.favs.includes(list.id) &&
                   <Button
                     className="btn-icon btn-3"
                     color="primary"
@@ -251,7 +251,7 @@ class ListDetails extends Component {
                     <span className="btn-inner--text">Like</span>
                   </Button>
                 }
-                {Object.keys(user).length === 0 || user.favs.length === 0 || user.favs.includes(list.id) &&
+                {Object.keys(user).length !== 0 && user.favs.includes(list.id) &&
                   <Button
                     className="btn-icon btn-3"
                     color="secondary"
