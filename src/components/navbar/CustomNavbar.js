@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { setUser } from "redux/actions";
@@ -23,8 +23,13 @@ import {
 
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from "headroom.js";
+
 // JavaScript plugin for auth magic links
 import { Magic } from 'magic-sdk';
+
+// Services & Helpes
+import { userService } from '_services/user.service'
+
 
 class CustomNavbar extends React.Component {
   state = {
@@ -33,7 +38,7 @@ class CustomNavbar extends React.Component {
     magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     let headroom = new Headroom(document.getElementById("navbar-main"));
     headroom.init();
     if (Object.keys(this.props.user).length === 0) {
@@ -41,62 +46,33 @@ class CustomNavbar extends React.Component {
     }
   }
 
-  isLoggedIn = () => {
-    this.state.magic.user.isLoggedIn()
-      .then((isLoggedIn) => {
-        if (isLoggedIn) {
-          this.state.magic.user.getMetadata()
-            .then((metadata) => {
-              this.onLoggedIn(metadata.email);
-            });
+  isLoggedIn = async () => {
+    try {
+      const isLoggedIn = await this.state.magic.user.isLoggedIn();
+      if (isLoggedIn) {
+        const metadata = await this.state.magic.user.getMetadata();
+        const user = await userService.getByEmail(metadata.email);
+        this.props.setUser(user);
+        if (user.username === undefined || user.username === "") {
+          this.props.history.push("/create");
         }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  handleLogout = async (e) => {
+    try {
+      await this.state.magic.user.logout();
+      this.props.setUser({});
+      this.setState({
+        loggedIn: true
       })
+    } catch (error) {
+      console.error(error);
+    }
   }
-
-  createUser = (email) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email })
-    };
-    fetch(process.env.REACT_APP_API_URL + "users/", requestOptions)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.props.setUser({ "id": result.id, "email": email });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-  }
-
-  onLoggedIn = (email) => {
-    fetch(process.env.REACT_APP_API_URL + "users/email/" + email)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          if (result.status === 404) {
-            this.createUser(email);
-          } else {
-            this.props.setUser(result.user);
-          }
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-  }
-
-  handleLogout = (e) => {
-    this.state.magic.user.logout()
-      .then(() => {
-        this.props.setUser({})
-      },
-        (error) => {
-          console.log(error)
-        })
-  };
 
   onExiting = () => {
     this.setState({
@@ -121,8 +97,8 @@ class CustomNavbar extends React.Component {
             <Media className="align-items-center">
               <span className="avatar avatar-sm rounded-circle">
                 <img
-                  alt="..."
-                  src={user.avatar_url ? user.avatar_url :  "https://joeschmoe.io/api/v1/" + user.email}
+                  alt={user.name}
+                  src={user.avatar_url ? user.avatar_url : "https://joeschmoe.io/api/v1/" + user.email}
                 />
               </span>
               <Media className="ml-2 d-none d-lg-block">
@@ -156,6 +132,11 @@ class CustomNavbar extends React.Component {
               src={user.avatar_url ? user.avatar_url : "https://joeschmoe.io/api/v1/" + user.email}
             />
           </span>
+          <Media className="ml-2 d-none d-lg-block">
+            <span className="mb-0 text-sm font-weight-bold">
+              {user.name}
+            </span>
+          </Media>
         </button>
       )
     } else {
@@ -213,7 +194,7 @@ class CustomNavbar extends React.Component {
                       </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
-                    <button className="navbar-toggler" id="navbar_global">
+                      <button className="navbar-toggler" id="navbar_global">
                         <span />
                         <span />
                       </button>
@@ -240,4 +221,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(CustomNavbar);
+)(withRouter(CustomNavbar));

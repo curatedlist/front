@@ -48,10 +48,6 @@ class EditProfile extends Component {
   };
 
   render() {
-    console.log(this.state.user.username)
-    console.log(this.props.match.params.username)
-    console.log(Object.keys(this.state.user).length === 0)
-    console.log(this.state.user.username !== parseInt(this.props.match.params.username))
     if (Object.keys(this.state.user).length === 0 || this.state.user.username !== this.props.match.params.username) {
       return (
         <>

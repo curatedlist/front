@@ -6,6 +6,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import store from './redux/store'
 
 import CreateList from 'components/list/CreateList';
+import CreateProfile from 'components/user/CreateProfile'
 import EditProfile from 'components/user/EditProfile'
 import ExploreLists from './components/list/ExploreLists';
 import Home from './components/home/Home';
@@ -28,8 +29,14 @@ ReactDOM.render(
           component={ExploreLists} />
         <Route exact path="/login"
           component={UserLogin} />
+        <Route exact path="/user/:id"
+          render={(props) => <UserProfile {...props} />} />
+        <Route exact path="/user/:id/edit"
+          render={(props) => <EditProfile {...props} />} />
         <Route exact path="/by/:username"
           render={(props) => <UserProfile {...props} />} />
+        <Route exact path="/create"
+          render={(props) => <CreateProfile {...props} />} />
         <Route exact path="/by/:username/edit"
           render={(props) => <EditProfile {...props} />} />
         <Route exact path="/list/create"

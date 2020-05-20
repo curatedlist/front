@@ -39,7 +39,11 @@ class ListItem extends Component {
       .then(res => res.json())
       .then((result) => {
         const index = this.state.list.items.findIndex(item => item.id === result.item.id)
-        this.state.list.items[index] = result.item
+        let newList = [...this.state.list.items]
+        newList[index] = result.item
+        this.setState({
+          list: newList
+        })
         this.props.history.push("/list/" + this.props.list.id)
       });
   };

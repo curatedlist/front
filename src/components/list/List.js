@@ -37,11 +37,11 @@ class List extends Component {
               <Col>
                 <Row className="justify-content-md-center">
                   <Col sm="8">
-                    <CardTitle className="h4 font-weight-bold mb-0 text-nowrap">
-                      <Link to={"/list/" + list.id} >
+                    <Link to={"/list/" + list.id} >
+                      <CardTitle className="h4 font-weight-bold mb-0 text-nowrap">
                         {list.name}
-                      </Link>
-                    </CardTitle>
+                      </CardTitle>
+                    </Link>
                   </Col>
                   <Col className="col-auto">
                     <span className="text-success mr-4 text-center">
@@ -71,9 +71,11 @@ class List extends Component {
                   </Col>
                 </Row>
                 <Row>
-                  <p className="mt-3 mb-0 ml-3 text-muted text-sm">
-                    {list.description}
-                  </p>
+                  <Link to={"/list/" + list.id} >
+                    <p className="mt-3 mb-0 ml-3 text-muted text-sm">
+                      {list.description}
+                    </p>
+                  </Link>
                 </Row>
               </Col>
               {Object.keys(user).length !== 0 &&
