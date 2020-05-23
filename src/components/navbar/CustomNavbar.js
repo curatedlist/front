@@ -43,6 +43,8 @@ class CustomNavbar extends React.Component {
     headroom.init();
     if (Object.keys(this.props.user).length === 0) {
       this.isLoggedIn();
+    } else if (this.props.user.username === "") {
+      this.props.history.push("/create");
     }
   }
 
@@ -53,7 +55,7 @@ class CustomNavbar extends React.Component {
         const metadata = await this.state.magic.user.getMetadata();
         const user = await userService.getByEmail(metadata.email);
         this.props.setUser(user);
-        if (user.username === undefined || user.username === "") {
+        if (user.username === "") {
           this.props.history.push("/create");
         }
       }
@@ -112,7 +114,7 @@ class CustomNavbar extends React.Component {
             <DropdownItem className="noti-title" header tag="div">
               <h6 className="text-overflow m-0">Welcome!</h6>
             </DropdownItem>
-            <DropdownItem to={"/by/" + user.username} tag={Link}>
+            <DropdownItem to={user.username ? "/by/" + user.username : "/create"} tag={Link}>
               <i className="ni ni-single-02" />
               <span>My profile</span>
             </DropdownItem>

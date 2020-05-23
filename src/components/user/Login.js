@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 
 import { setUser } from "redux/actions";
 
@@ -28,30 +28,31 @@ import { userService } from '_services/user.service'
 
 class UserLogin extends Component {
   state = {
-    magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
+    magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY)
   }
 
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    if (Object.keys(this.props.user).length !== 0) {
-      this.props.history.push("/by/" + this.props.user.username);
-    }
   }
 
-  handleLogin = async (event) => {
+  handleLogin = event => {
     event.preventDefault();
     try {
       const email = new FormData(event.target).get("email");
       if (email) {
-        const token = await this.state.magic.auth.loginWithMagicLink({ email })
-        const user = await userService.getOrCreate(email, token);
-        this.props.setUser(user);
-        if (user.username === undefined || user.username === "") {
-          this.props.history.push("/create");
-        } else {
-          this.props.history.push("/by/" + this.props.user.username);
-        }
+        this.state.magic.auth.loginWithMagicLink({ email })
+          .then( token => {
+            userService.getOrCreate(email, token)
+              .then(user => {
+                this.props.setUser(user);
+                if (user.username === "") {
+                  this.props.history.push("/create");
+                } else {
+                  this.props.history.push("/by/" + this.props.user.username);
+                }
+              })
+          })
       }
     } catch (error) {
       console.error(error);
@@ -59,6 +60,13 @@ class UserLogin extends Component {
   };
 
   render() {
+    if (Object.keys(this.props.user).length !== 0 ) {
+      return (
+        <>
+          <Redirect to={"/by/" + this.props.user.username} />
+        </>
+      );
+    }
     return (
       <App>
         <Container>
@@ -81,7 +89,7 @@ class UserLogin extends Component {
                     color="primary"
                     type="submit" >
                     Login / Sign up
-                    </Button>
+                  </Button>
                 </div>
               </Form>
             </CardBody>

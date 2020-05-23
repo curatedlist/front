@@ -1,11 +1,7 @@
-// Services & Helpes
-import { utils } from '_services/utils'
-
 export const userService = {
   create,
   getOrCreate,
   getByEmail,
-  getById,
   getByUsername
 }
 
@@ -18,7 +14,7 @@ async function create(email, token) {
     };
     const res = await fetch(process.env.REACT_APP_API_URL + "users/", requestOptions);
     const result = await res.json();
-    return result;
+    return result.user;
   }
   catch (error) {
     console.error(error);
@@ -34,31 +30,33 @@ async function getOrCreate(email, token) {
       return newUser;
     }
     return userByEmailJson.user;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }
 
 async function getByEmail(email) {
+  const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
+  if (!userByEmail.ok) {
+    throw Error(userByEmail.statusText);
+  }
   try {
-    const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
     const userByEmailJson = await userByEmail.json();
     return userByEmailJson.user;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }
 
-function getById(id) {
-  return fetch(process.env.REACT_APP_API_URL + "users/id/" + id)
-    .then(res => res.json())
-    .then(result => { return result })
-}
-
-function getByUsername(username) {
-  return fetch(process.env.REACT_APP_API_URL + "users/username/" + username)
-    .then(utils.handleErrors)
-    .then(res => res.json())
+async function getByUsername(username) {
+  const userByUsername = await fetch(process.env.REACT_APP_API_URL + "users/username/" + username);
+  if (!userByUsername.ok) {
+    throw Error(userByUsername.statusText);
+  }
+  try {
+    const userByUsernameJson = await userByUsername.json();
+    return userByUsernameJson.user;
+  } catch (error) {
+    console.error(error);
+  }
 }

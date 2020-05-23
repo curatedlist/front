@@ -38,10 +38,8 @@ class EditProfile extends Component {
       method: 'PUT',
       body: JSON.stringify(Object.fromEntries(data)),
       headers: { 'Content-Type': 'application/json' }
-    }).then(() => {
-      var newUser = {};
-      data.forEach((value, key) => { newUser[key] = value });
-      this.props.setUser({ ...this.props.user, ...newUser });
+    }).then((result) => {
+      this.props.setUser(result.user);
       this.props.history.push("/by/" + this.state.user.username)
     });
 

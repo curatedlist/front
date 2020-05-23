@@ -149,33 +149,15 @@ class UserProfile extends Component {
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    let id = this.props.match.params.id
     let username = this.props.match.params.username
-    if (id !== undefined) {
-      userService.getById(id)
-        .then(
-          (result) => {
-            this.setState({
-              isLoaded: true,
-              user: result.user,
-              lists: result.user.lists
-            });
-          },
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          }
-        )
-    } else if (username !== undefined) {
+    if (username !== undefined) {
       userService.getByUsername(username)
         .then(
-          (result) => {
+          (user) => {
             this.setState({
               isLoaded: true,
-              user: result.user,
-              lists: result.user.lists
+              user: user,
+              lists: user.lists
             });
           },
           (error) => {
