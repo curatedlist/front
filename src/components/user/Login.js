@@ -26,7 +26,7 @@ import App from 'App';
 // Services & Helpes
 import { userService } from '_services/user.service'
 
-class UserLogin extends Component {
+class Login extends Component {
   state = {
     magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY)
   }
@@ -108,4 +108,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(UserLogin));
+)(withRouter(Login));

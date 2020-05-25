@@ -21,7 +21,7 @@ import {
 // core components
 import App from 'App'
 
-class EditProfile extends Component {
+class Edit extends Component {
   state = {
     user: this.props.user
   };
@@ -153,4 +153,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(EditProfile));
+)(withRouter(Edit));

@@ -5,14 +5,14 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import store from './redux/store'
 
+import Login from './components/user/Login';
+import Create from 'components/user/Create'
+import Profile from './components/user/Profile';
+import Edit from 'components/user/Edit'
 import CreateList from 'components/list/CreateList';
-import CreateProfile from 'components/user/CreateProfile'
-import EditProfile from 'components/user/EditProfile'
 import ExploreLists from './components/list/ExploreLists';
 import Home from './components/home/Home';
 import ListPage from './components/list/ListPage';
-import UserProfile from './components/user/Profile';
-import UserLogin from './components/user/Login';
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
@@ -28,13 +28,19 @@ ReactDOM.render(
         <Route exact path="/all"
           component={ExploreLists} />
         <Route exact path="/login"
-          component={UserLogin} />
-        <Route exact path="/by/:username"
-          render={(props) => <UserProfile {...props} />} />
+          component={Login} />
         <Route exact path="/create"
-          render={(props) => <CreateProfile {...props} />} />
+          render={(props) => <Create {...props} />} />
+        <Route exact path="/by/:username"
+          render={(props) => <Profile section="lists" {...props} />} />
+        <Route exact path="/by/:username/favs"
+          render={(props) => <Profile section="favs" {...props} />} />
+        <Route exact path="/by/:username/following"
+          render={(props) => <Profile section="following" {...props} />} />
+        <Route exact path="/by/:username/followers"
+          render={(props) => <Profile section="followers" {...props} />} />
         <Route exact path="/by/:username/edit"
-          render={(props) => <EditProfile {...props} />} />
+          render={(props) => <Edit {...props} />} />
         <Route exact path="/list/create"
           render={(props) => <CreateList {...props} />} />
         <Route exact path="/list/:id"

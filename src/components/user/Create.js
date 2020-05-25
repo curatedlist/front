@@ -25,7 +25,7 @@ import App from 'App'
 // Services & Helpes
 import { userService } from '_services/user.service'
 
-class CreateProfile extends Component {
+class Create extends Component {
   state = {
     user: this.props.user
   }
@@ -101,9 +101,7 @@ class CreateProfile extends Component {
                         <Row>
                           <Col md="4">
                             <FormGroup>
-                              <label
-                                className="form-control-label"
-                                htmlFor="name">
+                              <label className="form-control-label" htmlFor="name">
                                 Full name
                               </label>
                               <Field
@@ -115,9 +113,7 @@ class CreateProfile extends Component {
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <label
-                                className="form-control-label"
-                                htmlFor="username">
+                              <label className="form-control-label" htmlFor="username">
                                 Username
                               </label>
                               <div className={props.touched.username ? (props.errors.username ? "has-danger" : "has-success") : null}>
@@ -135,9 +131,7 @@ class CreateProfile extends Component {
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <label
-                                className="form-control-label"
-                                htmlFor="email">
+                              <label className="form-control-label" htmlFor="email">
                                 Email address
                               </label>
                               <InputGroup className="mb-4">
@@ -154,9 +148,7 @@ class CreateProfile extends Component {
                         <Row>
                           <Col>
                             <FormGroup>
-                              <label
-                                className="form-control-label"
-                                htmlFor="bio">
+                              <label className="form-control-label" htmlFor="bio">
                                 About me
                               </label>
                               <Field
@@ -198,4 +190,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(CreateProfile));
+)(withRouter(Create));
