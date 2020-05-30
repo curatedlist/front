@@ -35,10 +35,10 @@ ReactDOM.render(
           render={(props) => <Profile section="lists" {...props} />} />
         <Route exact path="/by/:username/favs"
           render={(props) => <Profile section="favs" {...props} />} />
+        <Route exact path="/by/:username/lists"
+          render={(props) => <Profile section="lists" {...props} />} />
         <Route exact path="/by/:username/following"
           render={(props) => <Profile section="following" {...props} />} />
-        <Route exact path="/by/:username/followers"
-          render={(props) => <Profile section="followers" {...props} />} />
         <Route exact path="/by/:username/edit"
           render={(props) => <Edit {...props} />} />
         <Route exact path="/list/create"

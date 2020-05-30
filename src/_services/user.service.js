@@ -15,8 +15,7 @@ async function create(email, token) {
     const res = await fetch(process.env.REACT_APP_API_URL + "users/", requestOptions);
     const result = await res.json();
     return result.user;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }

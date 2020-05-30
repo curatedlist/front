@@ -40,10 +40,10 @@ class ExploreLists extends Component {
     document.scrollingElement.scrollTop = 0;
     listService.getAll("interesting")
       .then(
-        (result) => {
+        (lists) => {
           this.setState({
             isLoaded: true,
-            listsInteresting: result.lists
+            listsInteresting: lists
           });
         },
         (error) => {
@@ -55,10 +55,10 @@ class ExploreLists extends Component {
       );
     listService.getAll("trending")
       .then(
-        (result) => {
+        (lists) => {
           this.setState({
             isLoaded: true,
-            listsTrending: result.lists
+            listsTrending: lists
           });
         },
         (error) => {
@@ -70,10 +70,10 @@ class ExploreLists extends Component {
       );
     listService.getAll("newest")
       .then(
-        (result) => {
+        (lists) => {
           this.setState({
             isLoaded: true,
-            listsNewest: result.lists
+            listsNewest: lists
           });
         },
         (error) => {

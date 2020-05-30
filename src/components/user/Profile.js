@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -13,9 +13,10 @@ import {
 
 // core components
 import App from 'App'
-import List from 'components/list/List'
+import ListContainer from 'components/list/_lists'
 
 // Services & Helpes
+import { listService } from '_services/list.service';
 import { userService } from '_services/user.service';
 
 class Profile extends Component {
@@ -27,38 +28,48 @@ class Profile extends Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     let username = this.props.match.params.username
-    if (username !== undefined) {
-      userService.getByUsername(username)
-        .then(
-          (user) => {
-            this.setState({
-              isLoaded: true,
-              user: user,
-              lists: user.lists
-            });
-          },
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          }
-        )
+    if (username === undefined) {
+      this.props.history.push("/all");
     }
+    userService.getByUsername(username)
+      .then(
+        (user) => {
+          this.setState({
+            isLoaded: true,
+            user: user,
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+    this.loadLists(username, this.props.section);
+  }
+
+  loadLists = (username, section) => {
+    this.props.history.push("/by/" + username + "/" + section);
+    listService.getListsByUsername(username, section)
+      .then(
+        (lists) => {
+          this.setState({
+            lists: lists
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
   }
 
   render() {
     const { error, isLoaded, lists, user } = this.state;
     const currentUser = this.props.user;
-    const { section } = this.props;
-
-    function loadLists(lists){
-      return lists.map((list, index) => {
-        list.owner = user
-        return <List list={list} key={index} />
-      })
-    }
-    
     return (
       <App>
         <Container>
@@ -92,7 +103,7 @@ class Profile extends Component {
                         </Link>
                       }
                       <Button className="mr-4" color="primary" size="sm" >
-                        Lists
+                        Follow
                       </Button>
                       <Button
                         className="float-right"
@@ -105,24 +116,34 @@ class Profile extends Component {
                   <Col className="order-lg-1" lg="4">
                     <div className="card-profile-stats d-flex justify-content-center">
                       <div>
-                        <Link
-                          className="btn text-capitalize font-weight-normal"
+                        <Button
+                          className="text-capitalize font-weight-normal"
                           color="blank"
                           outline
-                          to={"/by/" + user.username}>
-                          <span className="heading">{user.lists.length}</span>
+                          onClick={(e) => this.loadLists(user.username, "lists")}>
+                          <span className="heading">{user.lists}</span>
                           <span className="description">Lists</span>
-                        </Link>
+                        </Button>
                       </div>
                       <div>
-                        <Link
-                          className="btn text-capitalize font-weight-normal"
+                        <Button
+                          className="text-capitalize font-weight-normal"
                           color="blank"
                           outline
-                          to={"/by/" + user.username + "/favs"}>
-                          <span className="heading">{user.favs.length}</span>
-                          <span className=" description">Favorites</span>
-                        </Link>
+                          onClick={(e) => this.loadLists(user.username, "favs")}>
+                          <span className="heading">{user.favs}</span>
+                          <span className=" description">Favs</span>
+                        </Button>
+                      </div>
+                      <div>
+                        <Button
+                          className="text-capitalize font-weight-normal"
+                          color="blank"
+                          outline
+                          onClick={(e) => this.loadLists(user.username, "following")}>
+                          <span className="heading">0</span>
+                          <span className="description">Follows</span>
+                        </Button>
                       </div>
                     </div>
                   </Col>
@@ -137,20 +158,12 @@ class Profile extends Component {
                   </div>
                 </div>
                 <div className="mt-5 py-5 border-top text-center">
-                  {lists !== null && lists.length > 0 &&
-                    <div className="px-4">
-                      <div className="py-5 ">
-                        <Row className="justify-content-center">
-                          <Col lg="9">
-                            {loadLists(lists)}
-                          </Col>
-                        </Row>
-                      </div>
-                    </div>
+                  {(lists !== undefined && lists.length !== 0) &&
+                    <ListContainer lists={lists} />
                   }
                   <Row className="justify-content-center">
                     <Col lg="9">
-                      {(lists === null || lists.length === 0) &&
+                      {(lists === undefined || lists.length === 0) &&
                         <p>
                           {user.name} doesn't have any list.... yet
                         </p>
@@ -186,4 +199,4 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps
-)(Profile);
+)(withRouter(Profile));
