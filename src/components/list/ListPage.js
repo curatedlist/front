@@ -2,155 +2,69 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
 
 // reactstrap components
 import {
   Button,
   Card,
-  Form,
   FormGroup,
-  Input,
-  Media,
   Container,
   Row,
   Col,
   CardBody,
-  CardTitle
 } from "reactstrap";
 
 // core components
 import App from 'App';
+import Item from 'components/list/_item';
 
 import { listService } from '_services/list.service';
 
-class ListItem extends Component {
-
-  componentDidMount() {
-    this.setState({
-      list: this.props.list
-    })
-  }
-
-  deleteItem = async (event) => {
-    event.preventDefault();
-    const itemId = event.currentTarget.getAttribute('data-id');
-    this.props.deleteItem(itemId);
-  };
-
-  render() {
-    const { item, index, user, list } = this.props;
-    return (
-      <>
-        <Card className="mb-4 shadow">
-          <CardBody>
-            <Row className="align-items-center">
-              <Col sm="1" className="pl-0">
-                <div className="icon icon-shape bg-default text-white rounded-circle shadow">
-                  {index}
-                </div>
-              </Col>
-              <Col sm="2" className="pr-0">
-                <Media className="align-items-center">
-                  <a
-                    className="avatar rounded-circle mr-3"
-                    href={item.url} >
-                    <img
-                      className="avatar"
-                      alt={item.name}
-                      src={item.pic_url} />
-                  </a>
-                </Media>
-              </Col>
-              <Col sm="7">
-                <a
-                  className=""
-                  href={item.url} >
-                  <CardTitle className="h5 font-weight-bold mb-0 ">
-                    {item.name}
-                  </CardTitle>
-                </a>
-                <p className="mt-3 mb-0 ml-3 text-muted text-sm">
-                  {item.description.substring(0, 100) + '...'}
-                </p>
-              </Col>
-              <Col sm="2" className="pl-0">
-                {Object.keys(user).length !== 0 && user.id === list.owner.id &&
-                  <Button className="btn-icon btn-2 mt-4" color="danger" type="button" onClick={this.deleteItem} data-id={item.id}>
-                    <span className="btn-inner--icon">
-                      <i className="fa fa-trash fa-2x" />
-                    </span>
-                  </Button>
-                }
-              </Col>
-            </Row>
-          </CardBody >
-        </Card >
-      </>
-    )
-  }
-}
-
-const ListItemWithRouter = withRouter(ListItem);
 
 class ListDetails extends Component {
   state = {
-    user_id: this.props.user.id,
-    list_id: this.props.list.id,
     list: this.props.list
   }
 
-  addItem = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.target);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(data))
-    }
-    fetch(process.env.REACT_APP_API_URL + "lists/" + this.state.list_id + "/items/", requestOptions)
-      .then(res => res.json())
-      .then((result) => {
-        this.state.list.items.push(result.item)
-        this.setState({
-          name: '',
-          description: '',
-          url: '',
-        });
+  addItem = (item) => {
+    let newList = Object.assign({}, this.state.list)
+    newList.items.push(item)
+    this.setState({
+      list: newList
+    })
+  }
+
+  replaceItem = (item) => {
+    const index = this.state.list.items.findIndex(it => it.id === item.id)
+    let newList = Object.assign({}, this.state.list)
+    newList.items[index] = item
+    this.setState({
+      list: newList
+    })
+  }
+
+  handleAddItem = (values, { resetForm }) => {
+    listService.addItem(this.props.list.id, values)
+      .then((item) => {
+        resetForm();
+        this.addItem(item)
       });
   };
 
   deleteItem = (itemId) => {
-    listService.deleteItem(this.state.list_id, itemId)
+    listService.deleteItem(this.props.list.id, itemId)
       .then(item => {
-        const index = this.state.list.items.findIndex(it => it.id === item.id)
-        let newList = Object.assign({}, this.state.list)
-        newList.items[index] = item
-        this.setState({
-          list: newList
-        })
+        this.replaceItem(item);
       });
   }
 
   favList = (event) => {
     event.preventDefault();
-    const requestOptions = {
-      method: 'PUT',
-    }
-    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + this.state.list_id + "/fav")
-    url.search = new URLSearchParams({ 'user_id': this.props.user.id.toString() }).toString();
-    fetch(url, requestOptions)
-      .then(res => res.json())
-      .then((result) => {
-      });
+    listService.fav(this.props.list.id, this.props.user.id)
   };
 
   render() {
-    var loadItems = () => {
-      let itemsList = this.props.list.items.filter((item) => { return !item.deleted }).map((item, index) => {
-        return <ListItemWithRouter key={item.id} index={index + 1} item={item} list={this.state.list} user={this.props.user} deleteItem={this.deleteItem} />
-      });
-      return itemsList;
-    };
     var createbutton = () => {
       const { user, list } = this.props;
       if (list.owner.id === user.id) {
@@ -158,54 +72,57 @@ class ListDetails extends Component {
           <Card className="mb-4 shadow">
             <CardBody>
 
-              <Form onSubmit={this.addItem}>
-                <input type="hidden" name="user_id" value={this.props.user.id} />
-                <input type="hidden" name="list_id" value={this.state.list_id} />
-                <Row>
-                  <Col md="5">
-                    <FormGroup>
-                      <Input
-                        className="form-control-alternative"
-                        name="name"
-                        value={this.state.name}
-                        placeholder="Item name"
-                        type="text" />
-                    </FormGroup>
-                  </Col>
-                  <Col md="5">
-                    <FormGroup>
-                      <Input
-                        className="form-control-alternative"
-                        placeholder="URL"
-                        name="url"
-                        value={this.state.url}
-                        type="text" />
-                    </FormGroup>
-                  </Col>
-                  <Col md="10">
-                    <FormGroup>
-                      <Input
-                        className="form-control-alternative"
-                        placeholder="A few words about this item..."
-                        name="description"
-                        value={this.state.description}
-                        rows="2"
-                        type="textarea"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="2">
-                    <Button
-                      className="btn-icon"
-                      color="primary"
-                      type="submit" >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-plus-circle fa-2x" ></i>
-                      </span>
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
+              <Formik
+                initialValues={{ name: '', url: '', description: '', user_id: this.props.user.id.toString() }}
+                onSubmit={this.handleAddItem}>
+                {(props) => (
+                  <Form>
+                    <Field type="hidden" name="user_id" />
+                    <Row>
+                      <Col md="5">
+                        <FormGroup>
+                          <Field
+                            className="form-control form-control-alternative"
+                            name="name"
+                            placeholder="Item name"
+                            type="text" />
+                        </FormGroup>
+                      </Col>
+                      <Col md="5">
+                        <FormGroup>
+                          <Field
+                            className="form-control form-control-alternative"
+                            placeholder="URL"
+                            name="url"
+                            type="text" />
+                        </FormGroup>
+                      </Col>
+                      <Col md="10">
+                        <FormGroup>
+                          <Field
+                            className="form-control form-control-alternative"
+                            placeholder="A few words about this item..."
+                            name="description"
+                            rows="2"
+                            type="textarea"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col md="2">
+                        <Button
+                          className="btn-icon"
+                          color="primary"
+                          disabled={props.isSubmitting}
+                          type="submit" >
+                          <span className="btn-inner--icon">
+                            <i className="fa fa-plus-circle fa-2x" ></i>
+                          </span>
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
             </CardBody>
           </Card>
         )
@@ -275,7 +192,9 @@ class ListDetails extends Component {
           <div className="mt-5 py-5 text-center">
             <Row className="justify-content-center">
               <Col lg="9">
-                {loadItems()}
+                {this.props.list.items.filter((item) => { return !item.deleted }).map((item, index) => {
+                  return <Item key={item.id} index={index + 1} item={item} list={this.state.list} user={this.props.user} deleteItem={this.deleteItem} />
+                })}
                 {createbutton()}
               </Col>
             </Row>

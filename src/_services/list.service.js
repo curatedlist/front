@@ -3,6 +3,7 @@ export const listService = {
   getListsByUsername,
   create,
   fav,
+  addItem,
   deleteItem,
 };
 
@@ -50,7 +51,9 @@ async function fav(list_id, user_id) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' }
     }
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav?user_id=" + user_id, requestOptions);
+    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + this.props.list.id + "/fav")
+    url.search = new URLSearchParams({ 'user_id': this.props.user.id.toString() }).toString();
+    const res = await fetch(url, requestOptions)
     const result = await res.json();
     return result.lists;
   } catch (error) {
@@ -58,6 +61,21 @@ async function fav(list_id, user_id) {
   }
 }
 
+
+async function addItem(list_id, values) {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: { 'Content-Type': 'application/json' },
+    }
+    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/", requestOptions)
+    const result = await res.json();
+    return result.item;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function deleteItem(list_id, item_id) {
   try {
