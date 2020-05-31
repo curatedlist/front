@@ -28,27 +28,27 @@ class ListDetails extends Component {
   }
 
   addItem = (item) => {
-    let newList = Object.assign({}, this.state.list)
-    newList.items.push(item)
+    let newList = Object.assign({}, this.state.list);
+    newList.items.push(item);
     this.setState({
       list: newList
-    })
+    });
   }
 
   replaceItem = (item) => {
-    const index = this.state.list.items.findIndex(it => it.id === item.id)
-    let newList = Object.assign({}, this.state.list)
-    newList.items[index] = item
+    const index = this.state.list.items.findIndex(it => it.id === item.id);
+    let newList = Object.assign({}, this.state.list);
+    newList.items[index] = item;
     this.setState({
       list: newList
-    })
+    });
   }
 
   handleAddItem = (values, { resetForm }) => {
     listService.addItem(this.props.list.id, values)
       .then((item) => {
         resetForm();
-        this.addItem(item)
+        this.addItem(item);
       });
   };
 
@@ -60,8 +60,13 @@ class ListDetails extends Component {
   }
 
   favList = (event) => {
-    event.preventDefault();
     listService.fav(this.props.list.id, this.props.user.id)
+      .then(list => {
+        this.props.user.favs.push(list.id);
+        this.setState({
+          list: list
+        });
+      });
   };
 
   render() {
@@ -71,7 +76,6 @@ class ListDetails extends Component {
         return (
           <Card className="mb-4 shadow">
             <CardBody>
-
               <Formik
                 initialValues={{ name: '', url: '', description: '', user_id: this.props.user.id.toString() }}
                 onSubmit={this.handleAddItem}>
@@ -217,14 +221,12 @@ class ListPage extends Component {
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-
-    fetch(process.env.REACT_APP_API_URL + "lists/id/" + this.props.match.params.id)
-      .then(res => res.json())
+    listService.get(this.props.match.params.id)
       .then(
-        (result) => {
+        (list) => {
           this.setState({
             isLoaded: true,
-            list: result.list
+            list: list
           });
         },
         (error) => {
@@ -237,20 +239,13 @@ class ListPage extends Component {
   }
 
   render() {
-    var loadList = () => {
-      const { error, isLoaded, list } = this.state;
-      if (error) {
-        return <div>Error: {error.message}</div>;
-      } else if (!isLoaded) {
-        return <div>Loading...</div>;
-      } else {
-        return <ListDetailsWithRouter key={list.id} list={list} user={this.props.user} />
-      }
-    };
+    const { error, isLoaded, list } = this.state;
     return (
       <App>
         <Container>
-          {loadList()}
+          {error && <div>Error: {error.message}</div>}
+          {!error && !isLoaded && <div>Loading...</div>}
+          {!error && isLoaded && <ListDetailsWithRouter key={list.id} list={list} user={this.props.user} />}
         </Container>
       </App>
     )

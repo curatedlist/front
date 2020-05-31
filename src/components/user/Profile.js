@@ -131,7 +131,7 @@ class Profile extends Component {
                           color="blank"
                           outline
                           onClick={(e) => this.loadLists(user.username, "favs")}>
-                          <span className="heading">{user.favs}</span>
+                          <span className="heading">{user.favs.length}</span>
                           <span className=" description">Favs</span>
                         </Button>
                       </div>
