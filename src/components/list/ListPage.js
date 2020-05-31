@@ -69,6 +69,17 @@ class ListDetails extends Component {
       });
   };
 
+  unfavList = (event) => {
+    listService.unfav(this.props.list.id, this.props.user.id)
+      .then(list => {
+        const index = this.props.user.favs.indexOf(this.props.list.id)
+        if (index !== -1) this.props.user.favs.splice(index);
+        this.setState({
+          list: list
+        });
+      });
+  };
+
   render() {
     var createbutton = () => {
       const { user, list } = this.props;
@@ -168,8 +179,8 @@ class ListDetails extends Component {
                   <Button
                     className="btn-icon btn-3"
                     color="secondary"
-                    disabled
-                    type="button">
+                    type="button"
+                    onClick={this.unfavList} >
                     <span className="btn-inner--icon ">
                       <i className="ni ni-like-2" />
                     </span>

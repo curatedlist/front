@@ -4,6 +4,7 @@ export const listService = {
   get,
   create,
   fav,
+  unfav,
   addItem,
   deleteItem,
 };
@@ -60,7 +61,7 @@ async function create(data) {
 async function fav(list_id, user_id) {
   try {
     const requestOptions = {
-      method: 'PUT',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     }
     var url = new URL(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav")
@@ -72,6 +73,23 @@ async function fav(list_id, user_id) {
     console.error(error);
   }
 }
+
+async function unfav(list_id, user_id) {
+  try {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    }
+    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav")
+    url.search = new URLSearchParams({ 'user_id': user_id.toString() }).toString();
+    const res = await fetch(url, requestOptions)
+    const result = await res.json();
+    return result.list;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 
 async function addItem(list_id, values) {

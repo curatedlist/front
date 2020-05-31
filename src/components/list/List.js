@@ -11,19 +11,28 @@ import {
   Col
 } from "reactstrap";
 
+import { listService } from '_services/list.service';
 
 class List extends Component {
 
   favList = (event) => {
-    event.preventDefault();
-    const requestOptions = {
-      method: 'PUT',
-    }
-    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + this.props.list.id + "/fav")
-    url.search = new URLSearchParams({ 'user_id': this.props.user.id.toString() }).toString();
-    fetch(url, requestOptions)
-      .then(res => res.json())
-      .then((result) => {
+    listService.fav(this.props.list.id, this.props.user.id)
+      .then(list => {
+        this.props.user.favs.push(list.id);
+        this.setState({
+          list: list
+        });
+      });
+  };
+
+  unfavList = (event) => {
+    listService.unfav(this.props.list.id, this.props.user.id)
+      .then(list => {
+        const index = this.props.user.favs.indexOf(this.props.list.id)
+        if (index !== -1) this.props.user.favs.splice(index);
+        this.setState({
+          list: list
+        });
       });
   };
 
@@ -91,7 +100,10 @@ class List extends Component {
                     </Button>
                   }
                   {user.favs.includes(list.id) &&
-                    <Button className="btn-icon btn-2 mt-4" color="secondary" disabled type="button">
+                    <Button className="btn-icon btn-2 mt-4" 
+                      color="secondary" 
+                      type="button"
+                      onClick={this.unfavList} >
                       <span className="mt-4">
                         <i className="ni ni-like-2" />
                       </span>
