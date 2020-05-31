@@ -206,7 +206,7 @@ class ListDetails extends Component {
 
           <div className="mt-5 py-5 text-center">
             <Row className="justify-content-center">
-              <Col lg="9">
+              <Col lg="11">
                 {this.props.list.items.filter((item) => { return !item.deleted }).map((item, index) => {
                   return <Item key={item.id} index={index + 1} item={item} list={this.state.list} user={this.props.user} deleteItem={this.deleteItem} />
                 })}

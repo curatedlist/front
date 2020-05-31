@@ -4,8 +4,6 @@ import classnames from 'classnames';
 // reactstrap components
 import {
   Container,
-  Row,
-  Col,
   Nav,
   NavItem,
   NavLink,
@@ -15,10 +13,10 @@ import {
 
 // core components
 import App from 'App';
-import List from 'components/list/List'
+import ListContainer from 'components/list/_lists'
 import { listService } from '_services/list.service';
 
-class ExploreLists extends Component {
+export default class Explore extends Component {
   state = {
     error: null,
     isLoaded: false,
@@ -141,63 +139,25 @@ class ExploreLists extends Component {
               </NavItem>
             </Nav>
           </div>
-              <TabContent activeTab={"tabs" + this.state.tabs}>
-                <TabPane tabId="tabs1">
-                  <div className="px-4">
-                    <div className="mt-5 py-5 ">
-                      <Row className="justify-content-center">
-                        <Col lg="9">
-                          {error && <em>Error: {error.message}</em>}
-                          {!isLoaded && <em>Loading...</em>}
-                          {listsInteresting.length !== 0 &&
-                            listsInteresting.map((list, index) =>
-                              <List list={list} key={index} />
-                            )
-                          }
-                        </Col>
-                      </Row>
-                    </div>
-                  </div>
-                </TabPane>
-                <TabPane tabId="tabs2">
-                  <div className="px-4">
-                    <div className="mt-5 py-5 ">
-                      <Row className="justify-content-center">
-                        <Col lg="9">
-                          {error && <em>Error: {error.message}</em>}
-                          {!isLoaded && <em>Loading...</em>}
-                          {listsTrending.length !== 0 &&
-                            listsTrending.map((list, index) =>
-                              <List list={list} key={index} />
-                            )
-                          }
-                        </Col>
-                      </Row>
-                    </div>
-                  </div>
-                </TabPane>
-                <TabPane tabId="tabs3">
-                  <div className="px-4">
-                    <div className="mt-5 py-5 ">
-                      <Row className="justify-content-center">
-                        <Col lg="9">
-                          {error && <em>Error: {error.message}</em>}
-                          {!isLoaded && <em>Loading...</em>}
-                          {listsNewest.length !== 0 &&
-                            listsNewest.map((list, index) =>
-                              <List list={list} key={index} />
-                            )
-                          }
-                        </Col>
-                      </Row>
-                    </div>
-                  </div>
-                </TabPane>
-              </TabContent>
+          <TabContent activeTab={"tabs" + this.state.tabs}>
+            <TabPane tabId="tabs1">
+              {error && <em>Error: {error.message}</em>}
+              {!isLoaded && <em>Loading...</em>}
+              <ListContainer lists={listsInteresting} />
+            </TabPane>
+            <TabPane tabId="tabs2">
+              {error && <em>Error: {error.message}</em>}
+              {!isLoaded && <em>Loading...</em>}
+              <ListContainer lists={listsTrending} />
+            </TabPane>
+            <TabPane tabId="tabs3">
+              {error && <em>Error: {error.message}</em>}
+              {!isLoaded && <em>Loading...</em>}
+              <ListContainer lists={listsNewest} />
+            </TabPane>
+          </TabContent>
         </Container>
       </App >
     )
   }
 };
-
-export default ExploreLists;

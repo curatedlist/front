@@ -28,7 +28,7 @@ class Item extends Component {
         <Card className="mb-4 shadow">
           <CardBody>
             <Row className="align-items-center">
-              <Col sm="1" className="pl-0">
+              <Col sm="2" className="pl-0">
                 <div className="icon icon-shape bg-default text-white rounded-circle shadow">
                   {index}
                 </div>
@@ -45,7 +45,7 @@ class Item extends Component {
                   </a>
                 </Media>
               </Col>
-              <Col sm="7">
+              <Col sm="6">
                 <a
                   className=""
                   href={item.url} >

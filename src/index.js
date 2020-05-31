@@ -10,7 +10,7 @@ import Create from 'components/user/Create'
 import Profile from './components/user/Profile';
 import Edit from 'components/user/Edit'
 import CreateList from 'components/list/CreateList';
-import ExploreLists from './components/list/ExploreLists';
+import Explore from './components/list/Explore';
 import Home from './components/home/Home';
 import ListPage from './components/list/ListPage';
 
@@ -26,7 +26,7 @@ ReactDOM.render(
         <Route exact path="/"
           component={Home} />
         <Route exact path="/all"
-          component={ExploreLists} />
+          component={Explore} />
         <Route exact path="/login"
           component={Login} />
         <Route exact path="/create"
