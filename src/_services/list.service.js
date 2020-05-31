@@ -2,7 +2,8 @@ export const listService = {
   getAll,
   getListsByUsername,
   create,
-  fav
+  fav,
+  deleteItem,
 };
 
 async function getAll(filter) {
@@ -52,6 +53,21 @@ async function fav(list_id, user_id) {
     const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav?user_id=" + user_id, requestOptions);
     const result = await res.json();
     return result.lists;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+async function deleteItem(list_id, item_id) {
+  try {
+    const requestOptions = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' }
+    }
+    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions);
+    const result = await res.json();
+    return result.item;
   } catch (error) {
     console.error(error);
   }

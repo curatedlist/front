@@ -21,6 +21,8 @@ import {
 // core components
 import App from 'App';
 
+import { listService } from '_services/list.service';
+
 class ListItem extends Component {
 
   componentDidMount() {
@@ -29,23 +31,10 @@ class ListItem extends Component {
     })
   }
 
-  deleteItem = (event) => {
+  deleteItem = async (event) => {
     event.preventDefault();
     const itemId = event.currentTarget.getAttribute('data-id');
-    const requestOptions = {
-      method: 'PATCH',
-    }
-    fetch(process.env.REACT_APP_API_URL + "lists/" + this.props.list.id + "/items/" + itemId + "/delete", requestOptions)
-      .then(res => res.json())
-      .then((result) => {
-        const index = this.state.list.items.findIndex(item => item.id === result.item.id)
-        let newList = [...this.state.list.items]
-        newList[index] = result.item
-        this.setState({
-          list: newList
-        })
-        this.props.history.push("/list/" + this.props.list.id)
-      });
+    this.props.deleteItem(itemId);
   };
 
   render() {
@@ -85,13 +74,6 @@ class ListItem extends Component {
                 </p>
               </Col>
               <Col sm="2" className="pl-0">
-                {/* 
-                <Button className="btn-icon btn-2 mt-4" color="default" type="button">
-                  <span className="btn-inner--icon">
-                    <i className="ni ni-like-2" />
-                  </span>
-                </Button>
-                */}
                 {Object.keys(user).length !== 0 && user.id === list.owner.id &&
                   <Button className="btn-icon btn-2 mt-4" color="danger" type="button" onClick={this.deleteItem} data-id={item.id}>
                     <span className="btn-inner--icon">
@@ -111,19 +93,10 @@ class ListItem extends Component {
 const ListItemWithRouter = withRouter(ListItem);
 
 class ListDetails extends Component {
-  //TODO: remove
   state = {
     user_id: this.props.user.id,
     list_id: this.props.list.id,
     list: this.props.list
-  }
-
-  componentDidMount() {
-    this.setState({
-      user_id: this.props.user.id,
-      list_id: this.props.list.id,
-      list: this.props.list
-    })
   }
 
   addItem = (event) => {
@@ -138,9 +111,25 @@ class ListDetails extends Component {
       .then(res => res.json())
       .then((result) => {
         this.state.list.items.push(result.item)
-        this.props.history.push("/list/" + this.state.list_id)
+        this.setState({
+          name: '',
+          description: '',
+          url: '',
+        });
       });
   };
+
+  deleteItem = (itemId) => {
+    listService.deleteItem(this.state.list_id, itemId)
+      .then(item => {
+        const index = this.state.list.items.findIndex(it => it.id === item.id)
+        let newList = Object.assign({}, this.state.list)
+        newList.items[index] = item
+        this.setState({
+          list: newList
+        })
+      });
+  }
 
   favList = (event) => {
     event.preventDefault();
@@ -157,12 +146,8 @@ class ListDetails extends Component {
 
   render() {
     var loadItems = () => {
-      let itemsList = this.props.list.items.map((item, index) => {
-        if (!item.deleted) {
-          return <ListItemWithRouter key={index} index={index + 1} item={item} list={this.state.list} user={this.props.user} />
-        } else {
-          return <></>
-        }
+      let itemsList = this.props.list.items.filter((item) => { return !item.deleted }).map((item, index) => {
+        return <ListItemWithRouter key={item.id} index={index + 1} item={item} list={this.state.list} user={this.props.user} deleteItem={this.deleteItem} />
       });
       return itemsList;
     };
@@ -182,6 +167,7 @@ class ListDetails extends Component {
                       <Input
                         className="form-control-alternative"
                         name="name"
+                        value={this.state.name}
                         placeholder="Item name"
                         type="text" />
                     </FormGroup>
@@ -192,6 +178,7 @@ class ListDetails extends Component {
                         className="form-control-alternative"
                         placeholder="URL"
                         name="url"
+                        value={this.state.url}
                         type="text" />
                     </FormGroup>
                   </Col>
@@ -201,6 +188,7 @@ class ListDetails extends Component {
                         className="form-control-alternative"
                         placeholder="A few words about this item..."
                         name="description"
+                        value={this.state.description}
                         rows="2"
                         type="textarea"
                       />
