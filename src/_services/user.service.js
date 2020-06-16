@@ -24,7 +24,7 @@ async function create(idToken, email) {
   }
 }
 
-async function update(idToken,id, values) {
+async function update(idToken, id, values) {
   try {
     const requestOptions = {
       method: 'PUT',
@@ -45,14 +45,22 @@ async function update(idToken,id, values) {
 }
 
 
-async function login(email) {
-  const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
-  if (!userByEmail.ok) {
-    throw Error(userByEmail.statusText);
+async function login(idToken, email) {
+  const requestOptions = {
+    method: 'POST',
+    body: JSON.stringify({ email: email }),
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json',
+    },
+  };
+  const loggedInUser = await fetch(process.env.REACT_APP_API_URL + "users/login", requestOptions);
+  if (!loggedInUser.ok) {
+    throw Error(loggedInUser.statusText);
   }
   try {
-    const userByEmailJson = await userByEmail.json();
-    return userByEmailJson.user;
+    const loggedInUserJson = await loggedInUser.json();
+    return loggedInUserJson.user;
   } catch (error) {
     console.error(error);
   }
@@ -60,13 +68,21 @@ async function login(email) {
 
 async function getOrCreate(idToken, email) {
   try {
-    const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
-    const userByEmailJson = await userByEmail.json();
-    if (userByEmailJson.status === 404) {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({ email: email }),
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json',
+      },
+    };
+    const loggedInUser = await fetch(process.env.REACT_APP_API_URL + "users/login", requestOptions);
+    if (!loggedInUser.ok) {
       const newUser = await userService.create(idToken, email);
       return newUser;
     }
-    return userByEmailJson.user;
+    const loggedInUserJson = await loggedInUser.json();
+    return loggedInUserJson.user;
   } catch (error) {
     console.error(error);
   }
@@ -77,7 +93,7 @@ async function getByUsername(username) {
   if (!userByUsername.ok) {
     throw Error(userByUsername.statusText);
   }
-  try {
+  try {
     const userByUsernameJson = await userByUsername.json();
     return userByUsernameJson.user;
   } catch (error) {

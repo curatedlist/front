@@ -37,9 +37,10 @@ class Edit extends Component {
   editProfile = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const user = userService.update(this.state.user.idToken, this.state.user.id, Object.fromEntries(data));
-    this.props.setUser(user);
-    this.props.history.push("/by/" + this.props.user.username)
+    userService.update(this.state.user.idToken, this.state.user.id, Object.fromEntries(data)).then(user => {
+      this.props.setUser(user);
+      this.props.history.push("/by/" + this.props.user.username)
+    })
   };
 
   render() {

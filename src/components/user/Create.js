@@ -50,9 +50,10 @@ class Create extends Component {
   }
 
   handleSubmit = (values) => {
-    const user = userService.update(this.props.user.idToken, this.state.user.id, values);
-    this.props.setUser(user);
-    this.props.history.push("/by/" + this.props.user.username)
+    userService.update(this.props.user.idToken, this.state.user.id, values).then( user => {
+      this.props.setUser(user);
+      this.props.history.push("/by/" + this.props.user.username)
+    })
   };
 
   render() {

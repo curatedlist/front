@@ -54,7 +54,7 @@ class CustomNavbar extends React.Component {
       if (isLoggedIn) {
         const metadata = await this.state.magic.user.getMetadata();
         const idToken = await this.state.magic.user.getIdToken();
-        const user = await userService.login(metadata.email);
+        const user = await userService.login(idToken, metadata.email);
         user.idToken = idToken
         this.props.setUser(user);
         if (user.username === "") {
