@@ -21,6 +21,9 @@ import {
 // core components
 import App from 'App'
 
+// Services & Helpes
+import { userService } from '_services/user.service'
+
 class Edit extends Component {
   state = {
     user: this.props.user
@@ -34,15 +37,9 @@ class Edit extends Component {
   editProfile = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch(process.env.REACT_APP_API_URL + "users/id/" + this.state.user.id, {
-      method: 'PUT',
-      body: JSON.stringify(Object.fromEntries(data)),
-      headers: { 'Content-Type': 'application/json' }
-    }).then((result) => {
-      this.props.setUser(result.user);
-      this.props.history.push("/by/" + this.state.user.username)
-    });
-
+    const user = userService.update(this.state.user.idToken, this.state.user.id, Object.fromEntries(data));
+    this.props.setUser(user);
+    this.props.history.push("/by/" + this.props.user.username)
   };
 
   render() {

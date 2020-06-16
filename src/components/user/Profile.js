@@ -105,12 +105,6 @@ class Profile extends Component {
                       <Button className="mr-4" color="primary" size="sm" >
                         Follow
                       </Button>
-                      <Button
-                        className="float-right"
-                        color="info"
-                        size="sm">
-                        Activity
-                      </Button>
                     </div>
                   </Col>
                   <Col className="order-lg-1" lg="4">

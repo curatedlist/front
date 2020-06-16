@@ -1,16 +1,20 @@
 export const userService = {
   create,
+  update,
+  login,
   getOrCreate,
-  getByEmail,
   getByUsername
 }
 
-async function create(email, token) {
+async function create(idToken, email) {
   try {
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, token: token })
+      body: JSON.stringify({ email: email }),
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json',
+      },
     };
     const res = await fetch(process.env.REACT_APP_API_URL + "users/", requestOptions);
     const result = await res.json();
@@ -20,27 +24,48 @@ async function create(email, token) {
   }
 }
 
-async function getOrCreate(email, token) {
+async function update(idToken,id, values) {
   try {
-    const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
-    const userByEmailJson = await userByEmail.json();
-    if (userByEmailJson.status === 404) {
-      const newUser = await userService.create(email, token);
-      return newUser;
-    }
-    return userByEmailJson.user;
+    const requestOptions = {
+      method: 'PUT',
+      body: JSON.stringify(values),
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await fetch(process.env.REACT_APP_API_URL + "users/id/" + id, requestOptions);
+    const result = await res.json();
+    const user = result.user
+    user.idToken = idToken
+    return user;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function getByEmail(email) {
+
+async function login(email) {
   const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
   if (!userByEmail.ok) {
     throw Error(userByEmail.statusText);
   }
   try {
     const userByEmailJson = await userByEmail.json();
+    return userByEmailJson.user;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getOrCreate(idToken, email) {
+  try {
+    const userByEmail = await fetch(process.env.REACT_APP_API_URL + "users/email/" + email);
+    const userByEmailJson = await userByEmail.json();
+    if (userByEmailJson.status === 404) {
+      const newUser = await userService.create(idToken, email);
+      return newUser;
+    }
     return userByEmailJson.user;
   } catch (error) {
     console.error(error);

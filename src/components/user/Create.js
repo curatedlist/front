@@ -50,15 +50,9 @@ class Create extends Component {
   }
 
   handleSubmit = (values) => {
-    fetch(process.env.REACT_APP_API_URL + "users/id/" + this.state.user.id, {
-      method: 'PUT',
-      body: JSON.stringify(values),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json()).then((result) => {
-      this.props.setUser(result.user);
-      this.props.history.push("/by/" + this.props.user.username)
-    });
-
+    const user = userService.update(this.props.user.idToken, this.state.user.id, values);
+    this.props.setUser(user);
+    this.props.history.push("/by/" + this.props.user.username)
   };
 
   render() {

@@ -42,15 +42,19 @@ class Login extends Component {
       const email = new FormData(event.target).get("email");
       if (email) {
         this.state.magic.auth.loginWithMagicLink({ email })
-          .then( token => {
-            userService.getOrCreate(email, token)
+          .then(token => {
+            userService.getOrCreate(token, email)
               .then(user => {
-                this.props.setUser(user);
-                if (user.username === "") {
-                  this.props.history.push("/create");
-                } else {
-                  this.props.history.push("/by/" + this.props.user.username);
-                }
+                this.state.magic.user.getIdToken()
+                  .then(idToken => {
+                    user.idToken = idToken;
+                    this.props.setUser(user);
+                    if (user.username === "") {
+                      this.props.history.push("/create");
+                    } else {
+                      this.props.history.push("/by/" + this.props.user.username);
+                    }
+                  })
               })
           })
       }
@@ -60,7 +64,7 @@ class Login extends Component {
   };
 
   render() {
-    if (Object.keys(this.props.user).length !== 0 ) {
+    if (Object.keys(this.props.user).length !== 0) {
       return (
         <>
           <Redirect to={"/by/" + this.props.user.username} />

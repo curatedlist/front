@@ -1,3 +1,5 @@
+import { handleErrors } from '_helpers/handleErrors'
+
 export const listService = {
   getAll,
   getListsByUsername,
@@ -44,12 +46,15 @@ async function get(list_id) {
   }
 }
 
-async function create(data) {
+async function create(idToken, data) {
   try {
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify(Object.fromEntries(data)),
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json',
+      },
     };
     const res = await fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions);
     const result = await res.json();
@@ -59,15 +64,16 @@ async function create(data) {
   }
 }
 
-async function deleteList(list_id, user_id) {
+async function deleteList(idToken, list_id) {
   try {
     const requestOptions = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json'
+      },
     };
-    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + list_id )
-    url.search = new URLSearchParams({ 'user_id': user_id.toString() }).toString();
-    const res = await fetch(url, requestOptions);
+    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id, requestOptions);
     const result = await res.json();
     return result.list;
   } catch (error) {
@@ -75,31 +81,33 @@ async function deleteList(list_id, user_id) {
   }
 }
 
-async function fav(list_id, user_id) {
+async function fav(idToken, list_id) {
   try {
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json'
+      },
     }
-    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav")
-    url.search = new URLSearchParams({ 'user_id': user_id.toString() }).toString();
-    const res = await fetch(url, requestOptions)
+    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav", requestOptions).then(handleErrors)
     const result = await res.json();
     return result.list;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
-async function unfav(list_id, user_id) {
+async function unfav(idToken, list_id) {
   try {
     const requestOptions = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json'
+      },
     }
-    var url = new URL(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav")
-    url.search = new URLSearchParams({ 'user_id': user_id.toString() }).toString();
-    const res = await fetch(url, requestOptions)
+    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav", requestOptions)
     const result = await res.json();
     return result.list;
   } catch (error) {
@@ -107,12 +115,15 @@ async function unfav(list_id, user_id) {
   }
 }
 
-async function addItem(list_id, values) {
+async function addItem(idToken, list_id, values) {
   try {
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify(values),
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json'
+      },
     }
     const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/", requestOptions)
     const result = await res.json();
@@ -122,11 +133,14 @@ async function addItem(list_id, values) {
   }
 }
 
-async function deleteItem(list_id, item_id) {
+async function deleteItem(idToken, list_id, item_id) {
   try {
     const requestOptions = {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Authorization': 'Bearer ' + idToken,
+        'Content-Type': 'application/json'
+      },
     }
     const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions);
     const result = await res.json();

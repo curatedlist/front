@@ -18,7 +18,7 @@ import { listService } from '_services/list.service';
 
 export default class Explore extends Component {
   state = {
-    error: null,
+    error: undefined,
     isLoaded: false,
     listsInteresting: [],
     listsTrending: [],

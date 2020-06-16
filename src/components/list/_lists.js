@@ -14,7 +14,7 @@ export default class ListContainer extends Component {
     const { lists } = this.props;
     return (
       <>
-        {lists !== null && lists.length > 0 &&
+        {lists !== undefined && lists.length > 0 &&
           <div className="px-4">
             <div className="py-5 ">
               <Row className="justify-content-center">

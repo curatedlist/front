@@ -23,10 +23,6 @@ import { listService } from '_services/list.service'
 
 class CreateList extends Component {
 
-  state = {
-    user: this.props.user
-  }
-
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -35,7 +31,7 @@ class CreateList extends Component {
   createList = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    listService.create(data).then(result => this.props.history.push("/list/" + result.id));
+    listService.create(this.props.user.idToken, data).then(list => this.props.history.push("/list/" + list.id));
   };
 
 
@@ -45,7 +41,6 @@ class CreateList extends Component {
         <Container>
           <Card className="card-profile bg-secondary shadow">
             <Form onSubmit={this.createList}>
-              <input type="hidden" name="user_id" value={this.props.user.id} />
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
                   <Col xs="8">

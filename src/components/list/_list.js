@@ -19,7 +19,7 @@ class List extends Component {
   }
 
   favList = (event) => {
-    listService.fav(this.props.list.id, this.props.user.id)
+    listService.fav(this.props.user.idToken, this.props.list.id)
       .then(list => {
         this.props.user.favs.push(list.id);
         this.setState({
@@ -29,7 +29,7 @@ class List extends Component {
   };
 
   unfavList = (event) => {
-    listService.unfav(this.props.list.id, this.props.user.id)
+    listService.unfav(this.props.user.idToken, this.props.list.id)
       .then(list => {
         const index = this.props.user.favs.indexOf(this.props.list.id)
         if (index !== -1) this.props.user.favs.splice(index);
@@ -40,7 +40,7 @@ class List extends Component {
   };
 
   delete = (event) => {
-    listService.deleteList(this.props.list.id, this.props.user.id)
+    listService.deleteList(this.props.user.idToken, this.props.list.id)
       .then(list => {
         this.setState({
           list: list
@@ -113,7 +113,7 @@ class List extends Component {
                         </span>
                       </Button>
                     }
-                    {!user.favs.includes(list.id) &&
+                    {user.id !== list.owner.id && !user.favs.includes(list.id) &&
                       <Button className="btn-icon btn-2 mt-4"
                         color="default"
                         type="button"
@@ -123,7 +123,7 @@ class List extends Component {
                         </span>
                       </Button>
                     }
-                    {user.favs.includes(list.id) &&
+                    {user.id !== list.owner.id && user.favs.includes(list.id) &&
                       <Button className="btn-icon btn-2 mt-4"
                         color="secondary"
                         type="button"
