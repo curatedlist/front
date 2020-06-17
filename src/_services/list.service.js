@@ -13,10 +13,13 @@ export const listService = {
 };
 
 async function getAll(filter) {
+  let url = new URL(process.env.REACT_APP_API_URL + "lists/");
+  url.search = new URLSearchParams({ 'filter_by': filter }).toString();
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw Error(res.statusText);
+  }
   try {
-    let url = new URL(process.env.REACT_APP_API_URL + "lists/");
-    url.search = new URLSearchParams({ 'filter_by': filter }).toString();
-    const res = await fetch(url);
     const result = await res.json();
     return result.lists;
   } catch (error) {

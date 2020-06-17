@@ -3,6 +3,7 @@ import classnames from 'classnames';
 
 // reactstrap components
 import {
+  Alert,
   Container,
   Nav,
   NavItem,
@@ -141,18 +142,48 @@ export default class Explore extends Component {
           </div>
           <TabContent activeTab={"tabs" + this.state.tabs}>
             <TabPane tabId="tabs1">
-              {error && <em>Error: {error.message}</em>}
-              {!isLoaded && <em>Loading...</em>}
+              {error &&
+                <Alert color="danger">
+                  <strong>Error!</strong> {error.message}
+                </Alert>
+              }
+              {!error && !isLoaded &&
+                <div class="text-center">
+                  <div class="spinner-grow text-secondary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              }
               <ListContainer lists={listsInteresting} />
             </TabPane>
             <TabPane tabId="tabs2">
-              {error && <em>Error: {error.message}</em>}
-              {!isLoaded && <em>Loading...</em>}
+              {error &&
+                <Alert color="danger">
+                  <strong>Error!</strong> {error.message}
+                </Alert>
+              }
+              {!error && !isLoaded &&
+                <div class="text-center">
+                  <div class="spinner-grow text-secondary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              }
               <ListContainer lists={listsTrending} />
             </TabPane>
             <TabPane tabId="tabs3">
-              {error && <em>Error: {error.message}</em>}
-              {!isLoaded && <em>Loading...</em>}
+              {error &&
+                <Alert color="danger">
+                  <strong>Error!</strong> {error.message}
+                </Alert>
+              }
+              {!error && !isLoaded &&
+                <div class="text-center">
+                  <div class="spinner-grow text-secondary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              }
               <ListContainer lists={listsNewest} />
             </TabPane>
           </TabContent>
