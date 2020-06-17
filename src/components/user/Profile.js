@@ -4,11 +4,12 @@ import { Link, withRouter } from "react-router-dom";
 
 // reactstrap components
 import {
+  Alert,
   Button,
   Card,
+  Col,
   Container,
   Row,
-  Col
 } from "reactstrap";
 
 // core components
@@ -73,16 +74,26 @@ class Profile extends Component {
     return (
       <App>
         <Container>
-          <Card className="card-profile shadow mt--300">
-            {error && <div>Error: {error.message}</div>}
-            {!error && !isLoaded && <div>Loading...</div>}
-            {!error && isLoaded &&
+          {error &&
+            <Alert className="mt--100" color="danger">
+              <strong>Error!</strong> {error.message}
+            </Alert>
+          }
+          {!error && !isLoaded &&
+            <div class="text-center">
+              <div class="spinner-grow text-primary" style={{width: 6 + 'rem', height: 6 + 'rem'}} role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+          {!error && isLoaded &&
+            <Card className="card-profile shadow mt--300">
               <div className="px-4">
                 <Row className="justify-content-center">
                   <Col className="order-lg-2" lg="3">
                     <div className="card-profile-image">
                       <img
-                        alt="..."
+                        alt={user.name}
                         className="rounded-circle"
                         src={user.avatar_url ? user.avatar_url : "https://joeschmoe.io/api/v1/" + user.email}
                       />
@@ -152,34 +163,37 @@ class Profile extends Component {
                   </div>
                 </div>
                 <div className="mt-5 py-5 border-top text-center">
+                  <h3 style={{textTransform: 'capitalize'}}>{this.props.section}</h3>
                   {(lists !== undefined && lists.length !== 0) &&
                     <ListContainer lists={lists} />
                   }
-                  <Row className="justify-content-center">
-                    <Col lg="9">
-                      {(lists === undefined || lists.length === 0) &&
-                        <p>
-                          {user.name} doesn't have any list.... yet
-                        </p>
-                      }
-                      {user.id === currentUser.id &&
-                        <Link to={"/list/create"}>
-                          <Button
-                            className="btn-icon"
-                            color="primary" >
-                            <span className="btn-inner--icon">
-                              <i className="ni ni-fat-add" ></i>
-                            </span>
-                            <span className="btn-inner--text">Create new List</span>
-                          </Button>
-                        </Link>
-                      }
-                    </Col>
-                  </Row>
+                  { this.props.section === "lists" &&
+                    <Row className="justify-content-center">
+                      <Col lg="9">
+                        {(lists === undefined || lists.length === 0) &&
+                          <p>
+                            {user.name} doesn't have any list.... yet
+                          </p>
+                        }
+                        {user.id === currentUser.id &&
+                          <Link to={"/list/create"}>
+                            <Button
+                              className="btn-icon"
+                              color="primary" >
+                              <span className="btn-inner--icon">
+                                <i className="ni ni-fat-add" ></i>
+                              </span>
+                              <span className="btn-inner--text">Create new List</span>
+                            </Button>
+                          </Link>
+                        }
+                      </Col>
+                    </Row>
+                  }
                 </div>
               </div>
-            }
-          </Card>
+            </Card>
+          }
         </Container>
       </App>
     )
