@@ -5,14 +5,15 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import store from './redux/store'
 
-import Login from './components/user/Login';
-import Create from 'components/user/Create'
-import Profile from './components/user/Profile';
-import Edit from 'components/user/Edit'
-import CreateList from 'components/list/CreateList';
-import Explore from './components/list/Explore';
-import Home from './components/home/Home';
-import ListPage from './components/list/ListPage';
+import NotFound   from './components/error/NotFound';
+import Home       from './components/home/Home';
+import CreateList from './components/list/CreateList';
+import Explore    from './components/list/Explore';
+import ListPage   from './components/list/ListPage';
+import Create     from './components/user/Create'
+import Edit       from './components/user/Edit'
+import Login      from './components/user/Login';
+import Profile    from './components/user/Profile';
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
@@ -45,6 +46,7 @@ ReactDOM.render(
           render={(props) => <CreateList {...props} />} />
         <Route exact path="/list/:id"
           render={(props) => <ListPage {...props} />} />
+        <Route path="*" component={NotFound} status={404}/>
       </Switch>
     </BrowserRouter >
   </Provider>,
