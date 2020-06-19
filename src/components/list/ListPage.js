@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
+import { ToastProvider, withToastManager } from 'react-toast-notifications';
 
 // reactstrap components
 import {
+  Alert,
   Button,
   Card,
   FormGroup,
@@ -15,18 +17,11 @@ import {
   CardBody,
 } from "reactstrap";
 
-import {
-  ToastProvider,
-  withToastManager,
-} from 'react-toast-notifications';
-
-
 // core components
 import App from 'App';
 import Item from 'components/list/_item';
 
 import { listService } from '_services/list.service';
-
 
 class ListDetails extends Component {
   state = {
@@ -51,41 +46,47 @@ class ListDetails extends Component {
   }
 
   handleAddItem = (values, { resetForm }) => {
-    listService.addItem(this.props.user.idToken, this.props.list.id, values)
-      .then((item) => {
-        resetForm();
-        this.addItem(item);
-      });
+    listService.addItem(this.props.user.idToken, this.props.list.id, values).then((item) => {
+      resetForm();
+      this.addItem(item);
+      this.props.toastManager.add("Item added succesfully", { appearance: 'info', autoDismiss: true })
+    }).catch(error => {
+      this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
+    });
   };
 
   deleteItem = (itemId) => {
-    listService.deleteItem(this.props.user.idToken, this.props.list.id, itemId)
-      .then(item => {
-        this.replaceItem(item);
-      });
+    listService.deleteItem(this.props.user.idToken, this.props.list.id, itemId).then(item => {
+      this.replaceItem(item);
+      this.props.toastManager.add("Item deleted succesfully", { appearance: 'info', autoDismiss: true })
+    }).catch(error => {
+      this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
+    });
   }
 
   favList = (event) => {
-    const { toastManager } = this.props;
     listService.fav(this.props.user.idToken, this.props.list.id).then(list => {
       this.props.user.favs.push(list.id);
       this.setState({
         list: list
       });
+      this.props.toastManager.add("List Favorited", { appearance: 'info', autoDismiss: true })
     }).catch(error => {
-      toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
+      this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
     });
   };
 
   unfavList = (event) => {
-    listService.unfav(this.props.user.idToken, this.props.list.id)
-      .then(list => {
-        const index = this.props.user.favs.indexOf(this.props.list.id)
-        if (index !== -1) this.props.user.favs.splice(index);
-        this.setState({
-          list: list
-        });
+    listService.unfav(this.props.user.idToken, this.props.list.id).then(list => {
+      const index = this.props.user.favs.indexOf(this.props.list.id)
+      if (index !== -1) this.props.user.favs.splice(index);
+      this.setState({
+        list: list
       });
+      this.props.toastManager.add("List unfaved", { appearance: 'info', autoDismiss: true })
+    }).catch(error => {
+      this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
+    });
   };
 
   render() {
@@ -261,17 +262,19 @@ class ListPage extends Component {
     return (
       <ToastProvider placement="top-center">
         <App>
-          {error &&
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <span class="alert-icon"><i class="ni ni-like-2"></i></span>
-              <span class="alert-text"><strong>Warning!</strong> {error.message}</span>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          }
           <Container>
-            {!error && !isLoaded && <div>Loading...</div>}
+            {error &&
+              <Alert color="danger">
+                <strong>Error!</strong> {error.message}
+              </Alert>
+            }
+            {!error && !isLoaded &&
+              <div class="text-center">
+                <div class="spinner-grow text-primary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
             {!error && isLoaded && <ListDetailsWithRouterAndToast key={list.id} list={list} user={this.props.user} />}
           </Container>
         </App>

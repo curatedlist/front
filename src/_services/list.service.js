@@ -15,140 +15,101 @@ export const listService = {
 async function getAll(filter) {
   let url = new URL(process.env.REACT_APP_API_URL + "lists/");
   url.search = new URLSearchParams({ 'filter_by': filter }).toString();
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw Error(res.statusText);
-  }
-  try {
-    const result = await res.json();
-    return result.lists;
-  } catch (error) {
-    console.error(error);
-  }
+  const res = await fetch(url).then(handleErrors);
+  const result = await res.json();
+  return result.lists;
 }
 
 async function getListsByUsername(username, section) {
-  try {
-    let url = new URL(process.env.REACT_APP_API_URL + "users/username/" + username + "/" + section)
-    const res = await fetch(url);
-    const result = await res.json();
-    return result.lists;
-  } catch (error) {
-    console.error(error);
-  }
+  let url = new URL(process.env.REACT_APP_API_URL + "users/username/" + username + "/" + section);
+  const res = await fetch(url).then(handleErrors);
+  const result = await res.json();
+  return result.lists;
 }
 
 async function get(list_id) {
-  try {
-    let url = new URL(process.env.REACT_APP_API_URL + "lists/id/" + list_id)
-    const res = await fetch(url);
-    const result = await res.json();
-    return result.list;
-  } catch (error) {
-    console.error(error);
-  }
+  let url = new URL(process.env.REACT_APP_API_URL + "lists/id/" + list_id);
+  const res = await fetch(url).then(handleErrors);
+  const result = await res.json();
+  return result.list;
 }
 
 async function create(idToken, data) {
-  try {
-    const requestOptions = {
-      method: 'POST',
-      body: JSON.stringify(Object.fromEntries(data)),
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json',
-      },
-    };
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions);
-    const result = await res.json();
-    return result.list;
-  } catch (error) {
-    console.error(error);
-  }
+  const requestOptions = {
+    method: 'POST',
+    body: JSON.stringify(Object.fromEntries(data)),
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json',
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.list;
 }
 
 async function deleteList(idToken, list_id) {
-  try {
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json'
-      },
-    };
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id, requestOptions);
-    const result = await res.json();
-    return result.list;
-  } catch (error) {
-    console.error(error);
-  }
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json'
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id, requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.list;
 }
 
 async function fav(idToken, list_id) {
-  try {
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json'
-      },
-    }
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav", requestOptions).then(handleErrors)
-    const result = await res.json();
-    return result.list;
-  } catch (error) {
-    throw error;
-  }
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json'
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav", requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.list;
 }
 
 async function unfav(idToken, list_id) {
-  try {
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json'
-      },
-    }
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav", requestOptions)
-    const result = await res.json();
-    return result.list;
-  } catch (error) {
-    console.error(error);
-  }
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json'
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav", requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.list;
 }
 
 async function addItem(idToken, list_id, values) {
-  try {
-    const requestOptions = {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json'
-      },
-    }
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/", requestOptions)
-    const result = await res.json();
-    return result.item;
-  } catch (error) {
-    console.error(error);
-  }
+  const requestOptions = {
+    method: 'POST',
+    body: JSON.stringify(values),
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json'
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/", requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.item;
 }
 
 async function deleteItem(idToken, list_id, item_id) {
-  try {
-    const requestOptions = {
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'Bearer ' + idToken,
-        'Content-Type': 'application/json'
-      },
-    }
-    const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions);
-    const result = await res.json();
-    return result.item;
-  } catch (error) {
-    console.error(error);
-  }
+  const requestOptions = {
+    method: 'PATCH',
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+      'Content-Type': 'application/json'
+    },
+  };
+  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.item;
 }
