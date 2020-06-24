@@ -4,7 +4,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { setUser } from "redux/actions";
 import classnames from 'classnames';
 import { Formik, Form, Field } from 'formik';
-import { ToastProvider, withToastManager } from 'react-toast-notifications';
+import { withToastManager } from 'react-toast-notifications';
 
 // reactstrap components
 import {
@@ -73,110 +73,108 @@ class Edit extends Component {
       );
     } else {
       return (
-        <ToastProvider placement="top-center">
-          <App>
-            <Container>
-              <Card className="card-profile shadow mt--300">
-                <CardBody>
-                  <Formik
-                    initialValues={{ name: this.state.user.name, username: this.state.user.username, bio: this.state.user.bio, email: this.state.user.email }}
-                    validate={this.validateUsername}
-                    onSubmit={this.handleSubmit}>
-                    {(props) => (
-                      <Form>
-                        <Row className="justify-content-center">
-                          <Col className="order-lg-2" lg="3">
-                            <div className="card-profile-image">
-                              <img
-                                alt={this.state.user.name ? this.state.user.name : this.state.user.email}
-                                className="rounded-circle"
-                                src={this.state.user.avatar_url ? this.state.user.avatar_url : "https://joeschmoe.io/api/v1/" + this.state.user.email}
-                              />
+        <App>
+          <Container>
+            <Card className="card-profile shadow mt--300">
+              <CardBody>
+                <Formik
+                  initialValues={{ name: this.state.user.name, username: this.state.user.username, bio: this.state.user.bio, email: this.state.user.email }}
+                  validate={this.validateUsername}
+                  onSubmit={this.handleSubmit}>
+                  {(props) => (
+                    <Form>
+                      <Row className="justify-content-center">
+                        <Col className="order-lg-2" lg="3">
+                          <div className="card-profile-image">
+                            <img
+                              alt={this.state.user.name ? this.state.user.name : this.state.user.email}
+                              className="rounded-circle"
+                              src={this.state.user.avatar_url ? this.state.user.avatar_url : "https://joeschmoe.io/api/v1/" + this.state.user.email}
+                            />
+                          </div>
+                        </Col>
+                      </Row>
+                      <h3 class="mt-8  mb-4">User information</h3>
+                      <Row>
+                        <Col md="4">
+                          <FormGroup>
+                            <label className="form-control-label" htmlFor="name">
+                              Full name
+                                </label>
+                            <Field
+                              name="name"
+                              placeholder="Your name"
+                              type="text"
+                              className="form-control" />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup>
+                            <label className="form-control-label" htmlFor="username">
+                              Username
+                              </label>
+                            <div className={props.touched.username ? (props.errors.username ? "has-danger" : "has-success") : null}>
+                              <Field
+                                className={classnames("form-control", {
+                                  "is-valid": props.touched.username && !props.errors.username,
+                                  "is-invalid": props.touched.username && props.errors.username
+                                })}
+                                name="username"
+                                required
+                                placeholder="Your username"
+                                type="text" />
                             </div>
-                          </Col>
-                        </Row>
-                        <h3 class="mt-8  mb-4">User information</h3>
-                        <Row>
-                          <Col md="4">
-                            <FormGroup>
-                              <label className="form-control-label" htmlFor="name">
-                                Full name
-                                </label>
-                              <Field
-                                name="name"
-                                placeholder="Your name"
-                                type="text"
-                                className="form-control" />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <label className="form-control-label" htmlFor="username">
-                                Username
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup>
+                            <label className="form-control-label" htmlFor="email">
+                              Email address
                               </label>
-                              <div className={props.touched.username ? (props.errors.username ? "has-danger" : "has-success") : null}>
-                                <Field
-                                  className={classnames("form-control", {
-                                    "is-valid": props.touched.username && !props.errors.username,
-                                    "is-invalid": props.touched.username && props.errors.username
-                                  })}
-                                  name="username"
-                                  required
-                                  placeholder="Your username"
-                                  type="text" />
-                              </div>
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <label className="form-control-label" htmlFor="email">
-                                Email address
-                              </label>
-                              <InputGroup className="mb-4">
-                                <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>
-                                    <i className="ni ni-email-83" />
-                                  </InputGroupText>
-                                </InputGroupAddon>
-                                <Field className="form-control" disabled name="email" value={this.state.user.email} type="email" />
-                              </InputGroup>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormGroup>
-                              <label className="form-control-label" htmlFor="bio">
-                                About me
+                            <InputGroup className="mb-4">
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                  <i className="ni ni-email-83" />
+                                </InputGroupText>
+                              </InputGroupAddon>
+                              <Field className="form-control" disabled name="email" value={this.state.user.email} type="email" />
+                            </InputGroup>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <label className="form-control-label" htmlFor="bio">
+                              About me
                                 </label>
-                              <Field
-                                className="form-control"
-                                placeholder="A few words about this you..."
-                                name="bio"
-                                rows={8}
-                                type="textarea"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-center">
-                          <Button
-                            className="my-4"
-                            color="primary"
-                            size="xl"
-                            type="submit"
-                            disabled={props.isSubmitting}>
-                            Save
+                            <Field
+                              className="form-control"
+                              placeholder="A few words about this you..."
+                              name="bio"
+                              rows={8}
+                              type="textarea"
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row className="justify-content-center">
+                        <Button
+                          className="my-4"
+                          color="primary"
+                          size="xl"
+                          type="submit"
+                          disabled={props.isSubmitting}>
+                          Save
                           </Button>
-                        </Row>
-                      </Form>
-                    )}
-                  </Formik>
-                </CardBody>
-              </Card>
-            </Container>
-          </App>
-        </ToastProvider>
+                      </Row>
+                    </Form>
+                  )}
+                </Formik>
+              </CardBody>
+            </Card>
+          </Container>
+        </App>
       )
     }
   };

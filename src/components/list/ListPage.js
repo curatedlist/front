@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import { ToastProvider, withToastManager } from 'react-toast-notifications';
+import { withToastManager } from 'react-toast-notifications';
 
 // reactstrap components
 import {
@@ -260,25 +260,23 @@ class ListPage extends Component {
   render() {
     const { error, isLoaded, list } = this.state;
     return (
-      <ToastProvider placement="top-center">
-        <App>
-          <Container>
-            {error &&
-              <Alert color="danger">
-                <strong>Error!</strong> {error.message}
-              </Alert>
-            }
-            {!error && !isLoaded &&
-              <div class="text-center">
-                <div class="spinner-grow text-primary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
-                  <span class="sr-only">Loading...</span>
-                </div>
+      <App>
+        <Container>
+          {error &&
+            <Alert color="danger">
+              <strong>Error!</strong> {error.message}
+            </Alert>
+          }
+          {!error && !isLoaded &&
+            <div class="text-center">
+              <div class="spinner-grow text-primary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+                <span class="sr-only">Loading...</span>
               </div>
-            }
-            {!error && isLoaded && <ListDetailsWithRouterAndToast key={list.id} list={list} user={this.props.user} />}
-          </Container>
-        </App>
-      </ToastProvider>
+            </div>
+          }
+          {!error && isLoaded && <ListDetailsWithRouterAndToast key={list.id} list={list} user={this.props.user} />}
+        </Container>
+      </App>
     )
   }
 };

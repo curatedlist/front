@@ -62,7 +62,7 @@ async function getOrCreate(idToken, email) {
       'Content-Type': 'application/json',
     },
   };
-  const loggedInUser = await fetch(process.env.REACT_APP_API_URL + "users/login", requestOptions).then(handleErrors);
+  const loggedInUser = await fetch(process.env.REACT_APP_API_URL + "users/login", requestOptions);
   if (!loggedInUser.ok) {
     const newUser = await userService.create(idToken, email);
     return newUser;

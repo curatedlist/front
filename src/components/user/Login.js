@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
-import { ToastProvider, withToastManager } from 'react-toast-notifications';
+import { withToastManager } from 'react-toast-notifications';
 
 import { setUser } from "redux/actions";
 
@@ -71,36 +71,34 @@ class Login extends Component {
       );
     }
     return (
-      <ToastProvider placement="top-center">
-        <App>
-          <Container>
-            <Card className="card-profile bg-secondary shadow border-0">
-              <CardBody className="px-lg-5 py-lg-5">
-                <Form onSubmit={this.handleLogin} role="form">
-                  <FormGroup className="mb-3">
-                    <InputGroup className="input-group-alternative">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="ni ni-email-83" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input placeholder="e-mail" type="email" name="email" required="required" />
-                    </InputGroup>
-                  </FormGroup>
-                  <div className="text-center">
-                    <Button
-                      className="my-4"
-                      color="primary"
-                      type="submit" >
-                      Login / Sign up
+      <App>
+        <Container>
+          <Card className="card-profile bg-secondary shadow border-0">
+            <CardBody className="px-lg-5 py-lg-5">
+              <Form onSubmit={this.handleLogin} role="form">
+                <FormGroup className="mb-3">
+                  <InputGroup className="input-group-alternative">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-email-83" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input placeholder="e-mail" type="email" name="email" required="required" />
+                  </InputGroup>
+                </FormGroup>
+                <div className="text-center">
+                  <Button
+                    className="my-4"
+                    color="primary"
+                    type="submit" >
+                    Login / Sign up
                     </Button>
-                  </div>
-                </Form>
-              </CardBody>
-            </Card>
-          </Container>
-        </App>
-      </ToastProvider>
+                </div>
+              </Form>
+            </CardBody>
+          </Card>
+        </Container>
+      </App>
     )
   };
 };
