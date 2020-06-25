@@ -29,7 +29,7 @@ import { userService } from '_services/user.service'
 
 class Login extends Component {
   state = {
-    magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY)
+    magic: new Magic(process.env.REACT_APP_MAGIC_API_KEY),
   }
 
   componentDidMount() {
@@ -54,9 +54,10 @@ class Login extends Component {
                   } else {
                     this.props.history.push("/by/" + this.props.user.username);
                   }
-                })
+                });
             }).catch(error => {
-              this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true })
+              this.props.toastManager.add(error.message, { appearance: 'error', autoDismiss: true });
+              this.state.magic.user.logout();
             });
         })
     }
