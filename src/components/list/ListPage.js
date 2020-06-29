@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { withToastManager } from 'react-toast-notifications';
+import { Helmet } from "react-helmet";
 
 // reactstrap components
 import {
@@ -269,12 +270,25 @@ class ListPage extends Component {
           }
           {!error && !isLoaded &&
             <div class="text-center">
-              <div class="spinner-grow text-primary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
+              <div
+                class="spinner-grow text-primary"
+                style={{ width: 6 + 'rem', height: 6 + 'rem' }}
+                role="status">
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
           }
-          {!error && isLoaded && <ListDetailsWithRouterAndToast key={list.id} list={list} user={this.props.user} />}
+          {!error && isLoaded &&
+            <>
+              <Helmet>
+                <title>{list.name} by {list.owner.username} | curatedli.st</title>
+                <meta property="og:title" content={list.name + " by " + list.owner.username + " | curatedli.st"} />
+                <meta property="og:description" content={list.description} />
+                <meta property="og:image" content={list.owner.avatar_url ? list.owner.avatar_url : "https://joeschmoe.io/api/v1/" + list.owner.email} />
+              </Helmet>
+              <ListDetailsWithRouterAndToast key={list.id} list={list} user={this.props.user} />
+            </>
+          }
         </Container>
       </App>
     )
