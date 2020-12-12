@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 // reactstrap components
 import {
@@ -9,7 +9,7 @@ import {
   Container,
   Row,
   Col
-} from "reactstrap";
+} from 'reactstrap';
 
 // core components
 import App from 'App';
@@ -119,26 +119,23 @@ function Features() {
   )
 }
 
-class Home extends Component {
+export default function Home() {
 
-  componentDidMount() {
+  useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-  }
+  }, []);
 
-  render() {
-    return (
-      <App hero={<BigHero />}>
-        <Helmet>
-          <title>Collaborative Curated Content | curatedli.st</title>
-          <meta property="og:title" content="Collaborative Curated Content | curatedli.st" />
-          <meta property="og:description" content="Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content." />
-          <meta property="og:image" content={require("assets/img/theme/checklist.svg")} />
-          <link rel="canonical" href="https://curatedli.st" />
-        </Helmet>
-        <Features />
-      </App>
-    );
-  }
+  return (
+    <App hero={<BigHero />}>
+      <Helmet>
+        <title>Collaborative Curated Content | curatedli.st</title>
+        <meta property="og:title" content="Collaborative Curated Content | curatedli.st" />
+        <meta property="og:description" content="Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content." />
+        <meta property="og:image" content={require("assets/img/theme/checklist.svg")} />
+        <link rel="canonical" href="https://curatedli.st" />
+      </Helmet>
+      <Features />
+    </App>
+  );
 }
-export default Home;
