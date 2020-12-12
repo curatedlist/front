@@ -18,7 +18,7 @@ export default function ListContainer(props) {
             <Row className="justify-content-center">
               <Col lg="11">
                 {lists.filter((list) => { return !list.deleted }).map((list, index) => {
-                  return <List list={list} key={index} />
+                  return <List list={list} key={list.id} />
                 })
                 }
               </Col>

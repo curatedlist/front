@@ -32,7 +32,7 @@ function Profile(props) {
   });  
   const [listsRequest, setListsRequest] = useState({
     loading: true,
-    lists: null,
+    lists: [],
     error: null,
   });  
   
@@ -49,7 +49,7 @@ function Profile(props) {
     }
     loadUser(username);
     loadLists(username, section);
-  }, []);
+  }, [username]);
 
   const loadUser = async (username) => {
     await userService.getByUsername(username)
@@ -87,7 +87,7 @@ function Profile(props) {
         (error) => {
           setListsRequest({
             loading: false,
-            lists: null,
+            lists: [],
             error: error,
           });
         }
@@ -110,14 +110,14 @@ function Profile(props) {
             <strong>Error!</strong> {listsError.message}
           </Alert>
         }
-        {!userError && !listsError && ( userloading || listsloading ) &&
+        {( userloading || listsloading ) &&
           <div className="text-center">
             <div className="spinner-grow text-primary" style={{ width: 6 + 'rem', height: 6 + 'rem' }} role="status">
               <span className="sr-only">Loading...</span>
             </div>
           </div>
         }
-        {!userError && !listsError && !( userloading || listsloading ) && user && lists &&
+        {user && lists &&
           <>
             <Helmet>
               <title>{user.name ? user.name : user.username} | curatedli.st</title>
