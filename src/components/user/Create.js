@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setUser } from 'redux/actions';
@@ -27,7 +27,6 @@ import App from 'App'
 import { userService } from '_services/user.service'
 
 function Create(props) {
-  const [user, setUser] = useState(props.user);
   const { addToast } = useToasts()
 
   useEffect(() => {
@@ -41,24 +40,25 @@ function Create(props) {
       errors.username = 'Required';
     }
     return userService.getByUsername(values.username)
-      .then((user) => {
+      .then(() => {
         errors.username = "Not valid"
         return errors
-      }).catch(error => {
+      }).catch(() => {
         return errors;
       })
   }
 
   const handleSubmit = (values) => {
     userService.update(props.user.idToken, user.id, values).then(user => {
-      setUser(user);
+      props.setUser(user);
       props.history.push("/by/" + user.username)
     }).catch(error => {
       addToast(error.message, { appearance: 'error', autoDismiss: true })
     });
   };
 
-  if (Object.keys(props.user).length === 0) {
+  const user = props.user;
+  if (Object.keys(user).length === 0) {
     return (
       <>
         <Redirect to="/login" />

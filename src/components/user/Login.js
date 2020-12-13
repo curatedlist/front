@@ -53,7 +53,7 @@ function Login(props) {
                   if (user.username === "") {
                     props.history.push("/create");
                   } else {
-                    props.history.push("/by/" + props.user.username);
+                    props.history.push("/by/" + user.username);
                   }
                 });
             }).catch(error => {

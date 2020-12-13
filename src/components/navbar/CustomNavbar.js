@@ -30,21 +30,19 @@ import { Magic } from 'magic-sdk';
 // Services & Helpes
 import { userService } from '_services/user.service'
 
-
 function CustomNavbar(props) {
   const magic = new Magic(process.env.REACT_APP_MAGIC_API_KEY);
-
   const [collapseClasses, setCollapseClasses] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
+  var {user, history} = props;
 
   useEffect(() => {
     async function fetchData() {
       let headroom = new Headroom(document.getElementById("navbar-main"));
       headroom.init();
-      if (Object.keys(props.user).length === 0) {
+      if (Object.keys(user).length === 0) {
         isLoggedIn();
-      } else if (props.user.username === "") {
-        props.history.push("/create");
+      } else if (user.username === "") {
+        history.push("/create");
       }
     }
     fetchData();
@@ -57,10 +55,10 @@ function CustomNavbar(props) {
         const metadata = await magic.user.getMetadata();
         const idToken = await magic.user.getIdToken();
         const user = await userService.login(idToken, metadata.email);
-        user.idToken = idToken
         props.setUser(user);
+        user.idToken = idToken
         if (user.username === "") {
-          props.history.push("/create");
+          history.push("/create");
         }
       }
     } catch (error) {
@@ -72,7 +70,6 @@ function CustomNavbar(props) {
     try {
       await magic.user.logout();
       props.setUser({});
-      setLoggedIn(true);
     } catch (error) {
       console.error(error);
     }
@@ -88,7 +85,7 @@ function CustomNavbar(props) {
 
   let loginDropdown
   let togler
-  const { user } = props
+
   if (Object.keys(user).length !== 0) {
     loginDropdown = (
       <UncontrolledDropdown nav>
