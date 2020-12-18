@@ -1,0 +1,13 @@
+// General
+.btn-gradient-github {
+  background: $github linear-gradient(180deg, mix($body-bg, $github, 15%), $github) repeat-x;
+  color: $white;
+}
+.btn-gradient-reddit {
+  background: $reddit linear-gradient(180deg, mix($body-bg, $reddit, 15%), $reddit) repeat-x;
+  color: $white;
+}
+.btn-gradient-tumblr {
+  background: $tumblr linear-gradient(180deg, mix($body-bg, $tumblr, 15%), $tumblr) repeat-x;
+  color: $white;
+}

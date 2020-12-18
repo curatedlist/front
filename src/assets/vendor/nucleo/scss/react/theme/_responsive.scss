@@ -1,0 +1,11 @@
+@include media-breakpoint-down(xs) {
+  .pagination {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .page-item .page-link {
+      margin-top: .25rem;
+      margin-bottom: .25rem;
+    }
+  }
+}

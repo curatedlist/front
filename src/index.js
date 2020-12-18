@@ -16,10 +16,10 @@ import Edit       from './components/user/Edit';
 import Login      from './components/user/Login';
 import Profile    from './components/user/Profile';
 
-import 'assets/vendor/nucleo/css/nucleo.css';
-import 'assets/vendor/font-awesome/css/font-awesome.min.css';
-import 'assets/scss/argon-design-system-react.scss?v1.1.0';
-
+import 'assets/vendor/nucleo/css/nucleo-svg.css';
+import 'assets/vendor/nucleo/css/nucleo-icons.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/vendor/nucleo/scss/argon-design-system.scss?v1.0.0";
 
 ReactDOM.render(
   <Provider store={store}>

@@ -35,64 +35,69 @@ function Profile(props) {
     lists: [],
     error: null,
   });  
+
+  const [section, setSection] = useState(props.section);
   
   const { addToast } = useToasts();
 
   const username = props.match.params.username;
-  const section = props.section;
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    if (username === undefined) {
-      props.history.push("/all");
+  }, []);
+
+  useEffect(() => {
+    const loadUser = async (username) => {
+      if (username === undefined) {
+        props.history.push("/all");
+      }
+      await userService.getByUsername(username)
+          .then(
+            (user) => {
+              setUserRequest({
+                loading: false,
+                user: user,
+                error: null,
+              });
+            },
+            (error) => {
+              setUserRequest({
+                loading: false,
+                user: null,
+                error: error,
+              });
+            }
+          ).catch(error => {
+            addToast(error.message, { appearance: 'error', autoDismiss: true })
+          })
     }
     loadUser(username);
-    loadLists(username, section);
-  }, [username]);
-
-  const loadUser = async (username) => {
-    await userService.getByUsername(username)
+  }, [username,addToast, props.history]);
+  
+  useEffect(() => {
+    const loadLists = (username, section) => {
+      props.history.push("/by/" + username + "/" + section);
+      listService.getListsByUsername(username, section)
         .then(
-          (user) => {
-            setUserRequest({
+          (lists) => {
+            setListsRequest({
               loading: false,
-              user: user,
+              lists: lists,
               error: null,
             });
           },
           (error) => {
-            setUserRequest({
+            setListsRequest({
               loading: false,
-              user: null,
+              lists: [],
               error: error,
             });
           }
-        ).catch(error => {
-          addToast(error.message, { appearance: 'error', autoDismiss: true })
-        })
-  }
-  
-  const loadLists = (username, section) => {
-    props.history.push("/by/" + username + "/" + section);
-    listService.getListsByUsername(username, section)
-      .then(
-        (lists) => {
-          setListsRequest({
-            loading: false,
-            lists: lists,
-            error: null,
-          });
-        },
-        (error) => {
-          setListsRequest({
-            loading: false,
-            lists: [],
-            error: error,
-          });
-        }
-      )
-  }
+        )
+    }
+    loadLists(username, section);
+  }, [username, section, props.history]);
 
   const currentUser = props.user;
   const { userloading, user, userError } = userRequest;
@@ -163,7 +168,7 @@ function Profile(props) {
                           className="text-capitalize font-weight-normal"
                           color="blank"
                           outline
-                          onClick={(e) => loadLists(user.username, "lists")}>
+                          onClick={(e) => setSection("lists")}>
                           <span className="heading">{user.lists}</span>
                           <span className="description">Lists</span>
                         </Button>
@@ -173,7 +178,7 @@ function Profile(props) {
                           className="text-capitalize font-weight-normal"
                           color="blank"
                           outline
-                          onClick={(e) => loadLists(user.username, "favs")}>
+                          onClick={(e) => setSection("favs")}>
                           <span className="heading">{user.favs.length}</span>
                           <span className=" description">Favs</span>
                         </Button>
@@ -183,7 +188,7 @@ function Profile(props) {
                           className="text-capitalize font-weight-normal"
                           color="blank"
                           outline
-                          onClick={(e) => loadLists(user.username, "following")}>
+                          onClick={(e) => setSection("following")}>
                           <span className="heading">0</span>
                           <span className="description">Follows</span>
                         </Button>

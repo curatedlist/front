@@ -247,7 +247,7 @@ function ListPage(props) {
           });
         }
       )
-  }, []);
+  }, [props.match.params.id]);
 
   const {list, error, loading} = listRequest
   return (

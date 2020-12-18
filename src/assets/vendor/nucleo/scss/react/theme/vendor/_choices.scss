@@ -1,0 +1,18 @@
+.choices[data-type*="select-multiple"] .choices__button:after,
+.choices[data-type*="text"] .choices__button:after {
+  font-weight: 900;
+  font-family: "Font Awesome 5 Free";
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-feature-settings: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  content: "\f00d";
+  right: 19px;
+  top: 0px;
+  font-size: 11px;
+  text-indent: 1px;
+  position: absolute;
+}
