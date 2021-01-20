@@ -198,12 +198,12 @@ function ListDetails(props) {
           </Col>
         </Row>
 
-        <div className="text-center mt-5">
+        <div className="text-center">
           <h3 className="mb-0">{list.name}</h3>
           {list.description}
         </div>
 
-        <div className="mt-5 py-5 text-center">
+        <div className="py-5 text-center">
           <Row className="justify-content-center">
             <Col lg="11">
               {props.list.items.filter((item) => { return !item.deleted }).map((item, index) => {
