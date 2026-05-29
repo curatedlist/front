@@ -24,14 +24,11 @@ import {
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from 'headroom.js';
 
-// JavaScript plugin for auth magic links
-import { Magic } from 'magic-sdk';
-
-// Services & Helpes
-import { userService } from '_services/user.service'
+// Google auth
+import { googleLogout } from '@react-oauth/google';
+import { loadSession, clearSession } from '_helpers/auth';
 
 function CustomNavbar(props) {
-  const magic = new Magic(process.env.REACT_APP_MAGIC_API_KEY);
   const [collapseClasses, setCollapseClasses] = useState("");
   var {user, history} = props;
 
@@ -40,7 +37,13 @@ function CustomNavbar(props) {
       let headroom = new Headroom(document.getElementById("navbar-main"));
       headroom.init();
       if (Object.keys(user).length === 0) {
-        isLoggedIn();
+        const saved = loadSession();
+        if (saved) {
+          props.setUser(saved);
+          if (saved.username === "") {
+            history.push("/create");
+          }
+        }
       } else if (user.username === "") {
         history.push("/create");
       }
@@ -48,27 +51,10 @@ function CustomNavbar(props) {
     fetchData();
   }, []);
 
-  const isLoggedIn = async () => {
-    try {
-      const isLoggedIn = await magic.user.isLoggedIn();
-      if (isLoggedIn) {
-        const metadata = await magic.user.getMetadata();
-        const idToken = await magic.user.getIdToken();
-        const user = await userService.login(idToken, metadata.email);
-        props.setUser(user);
-        user.idToken = idToken
-        if (user.username === "") {
-          history.push("/create");
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const handleLogout = async (e) => {
     try {
-      await magic.user.logout();
+      googleLogout();
+      clearSession();
       props.setUser({});
     } catch (error) {
       console.error(error);
