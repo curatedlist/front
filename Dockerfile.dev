@@ -1,6 +1,9 @@
 # pull official base image
 FROM node:14.0.0-alpine
 
+# install build deps required by node-sass
+RUN apk add --no-cache python2 make g++ && ln -sf python2 /usr/bin/python
+
 # set working directory
 WORKDIR /app
 
