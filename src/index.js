@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import store from './redux/store';
 
@@ -22,6 +23,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/vendor/nucleo/scss/argon-design-system.scss?v1.0.0";
 
 ReactDOM.render(
+  <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
   <Provider store={store}>
     <ToastProvider placement="top-center">
       <BrowserRouter>
@@ -52,6 +54,7 @@ ReactDOM.render(
         </Switch>
       </BrowserRouter >
     </ToastProvider>
-  </Provider>,
+  </Provider>
+  </GoogleOAuthProvider>,
   document.getElementById('root')
 );

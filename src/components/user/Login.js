@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 // Dependencies & libraries
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
-import { Magic } from 'magic-sdk';
+import { GoogleLogin } from '@react-oauth/google';
 
 import { setUser } from 'redux/actions';
+import { saveSession } from '_helpers/auth';
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Container,
 } from 'reactstrap';
 
@@ -29,7 +23,6 @@ import App from 'App';
 import { userService } from '_services/user.service'
 
 function Login(props) {
-  const [magic] = useState(new Magic(process.env.REACT_APP_MAGIC_API_KEY));
   const { addToast } = useToasts()
 
   useEffect(() => {
@@ -37,33 +30,23 @@ function Login(props) {
     document.scrollingElement.scrollTop = 0;
   }, []);
 
-
-  const handleLogin = (event) => {
-    event.preventDefault();
-    const email = new FormData(event.target).get("email");
-    if (email) {
-      magic.auth.loginWithMagicLink({ email })
-        .then(token => {
-          userService.getOrCreate(token, email)
-            .then(user => {
-              magic.user.getIdToken()
-                .then(idToken => {
-                  user.idToken = idToken;
-                  props.setUser(user);
-                  if (user.username === "") {
-                    props.history.push("/create");
-                  } else {
-                    props.history.push("/by/" + user.username);
-                  }
-                });
-            }).catch(error => {
-              addToast(error.message, { appearance: 'error', autoDismiss: true });
-              magic.user.logout();
-            });
-        })
-    }
+  const handleSuccess = (credentialResponse) => {
+    const idToken = credentialResponse.credential;
+    userService.getOrCreate(idToken)
+      .then(user => {
+        user.idToken = idToken;
+        saveSession(user);
+        props.setUser(user);
+        if (user.username === "") {
+          props.history.push("/create");
+        } else {
+          props.history.push("/by/" + user.username);
+        }
+      })
+      .catch(error => {
+        addToast(error.message, { appearance: 'error', autoDismiss: true });
+      });
   };
-
 
   if (Object.keys(props.user).length !== 0) {
     return (
@@ -77,26 +60,16 @@ function Login(props) {
       <Container>
         <Card className="card-profile bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
-            <Form onSubmit={handleLogin} role="form">
-              <FormGroup className="mb-3">
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-email-83" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input placeholder="e-mail" type="email" name="email" required="required" />
-                </InputGroup>
-              </FormGroup>
-              <div className="text-center">
-                <Button
-                  className="my-4"
-                  color="primary"
-                  type="submit" >
-                  Login / Sign up
-                  </Button>
+            <div className="text-center">
+              <h4 className="mb-4">Sign in to curatedli.st</h4>
+              <div className="d-inline-block">
+                <GoogleLogin
+                  onSuccess={handleSuccess}
+                  onError={() => addToast('Login failed', { appearance: 'error', autoDismiss: true })}
+                  useOneTap
+                />
               </div>
-            </Form>
+            </div>
           </CardBody>
         </Card>
       </Container>

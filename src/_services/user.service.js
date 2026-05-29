@@ -8,10 +8,10 @@ export const userService = {
   getByUsername
 }
 
-async function create(idToken, email) {
+// The backend derives the email from the verified Google token, so no body is needed.
+async function create(idToken) {
   const requestOptions = {
     method: 'POST',
-    body: JSON.stringify({ email: email }),
     headers: {
       'Authorization': 'Bearer ' + idToken,
       'Content-Type': 'application/json',
@@ -39,10 +39,9 @@ async function update(idToken, id, values) {
 }
 
 
-async function login(idToken, email) {
+async function login(idToken) {
   const requestOptions = {
     method: 'POST',
-    body: JSON.stringify({ email: email }),
     headers: {
       'Authorization': 'Bearer ' + idToken,
       'Content-Type': 'application/json',
@@ -53,10 +52,9 @@ async function login(idToken, email) {
   return loggedInUserJson.user;
 }
 
-async function getOrCreate(idToken, email) {
+async function getOrCreate(idToken) {
   const requestOptions = {
     method: 'POST',
-    body: JSON.stringify({ email: email }),
     headers: {
       'Authorization': 'Bearer ' + idToken,
       'Content-Type': 'application/json',
@@ -64,7 +62,7 @@ async function getOrCreate(idToken, email) {
   };
   const loggedInUser = await fetch(process.env.REACT_APP_API_URL + "users/login", requestOptions);
   if (!loggedInUser.ok) {
-    const newUser = await userService.create(idToken, email);
+    const newUser = await userService.create(idToken);
     return newUser;
   }
   const loggedInUserJson = await loggedInUser.json();
