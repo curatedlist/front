@@ -34,18 +34,18 @@ jobs:
       with:
         project_id: ${{ secrets.GOOGLE_CLOUD_RUN_PROJECT }}
 
-    # Build and push image to Google Container Registry
+    # Build and push image to Artifact Registry
     - name: Build
       run: |-
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          --tag "$RUN_REGION-docker.pkg.dev/$PROJECT_ID/containers/$SERVICE_NAME:$GITHUB_SHA"
     # Deploy image to Cloud Run
     - name: Deploy
       run: |-
         gcloud run deploy "$SERVICE_NAME" \
           --quiet \
           --region "$RUN_REGION" \
-          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --image "$RUN_REGION-docker.pkg.dev/$PROJECT_ID/containers/$SERVICE_NAME:$GITHUB_SHA" \
           --platform "managed" \
           --allow-unauthenticated
