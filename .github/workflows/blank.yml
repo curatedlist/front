@@ -21,13 +21,17 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+
+    # Authenticate to Google Cloud with the service account key
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.RUN_SA_KEY }}
 
     # Setup gcloud CLI
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - uses: google-github-actions/setup-gcloud@v2
       with:
-        version: '290.0.1'
-        service_account_key: ${{ secrets.RUN_SA_KEY }}
         project_id: ${{ secrets.GOOGLE_CLOUD_RUN_PROJECT }}
 
     # Build and push image to Google Container Registry
