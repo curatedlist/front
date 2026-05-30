@@ -2,7 +2,7 @@
   "name": "curatedli.st",
   "description": "Collaborative curated content",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/curatedlist/front.git"
@@ -11,9 +11,6 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.14.0",
     "@react-oauth/google": "^0.13.5",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "formik": "^2.1.4",
@@ -23,27 +20,23 @@
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "5.0.1",
     "react-toast-notifications": "2.4.0",
     "reactstrap": "^8.4.1",
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "ajv": "^8.17.1",
-    "sass": "^1.77.8"
+    "@vitejs/plugin-react": "^4.3.4",
+    "sass": "^1.77.8",
+    "vite": "^5.4.19"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "compile-sass": "sass src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.css",
     "minify-sass": "sass --style=compressed src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.min.css",
     "map-sass": "sass --source-map src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.css"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

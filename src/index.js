@@ -20,10 +20,10 @@ import Profile    from './components/user/Profile';
 import 'assets/vendor/nucleo/css/nucleo-svg.css';
 import 'assets/vendor/nucleo/css/nucleo-icons.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "assets/vendor/nucleo/scss/argon-design-system.scss?v1.0.0";
+import "assets/vendor/nucleo/scss/argon-design-system.scss";
 
 ReactDOM.render(
-  <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
   <Provider store={store}>
     <ToastProvider placement="top-center">
       <BrowserRouter>
