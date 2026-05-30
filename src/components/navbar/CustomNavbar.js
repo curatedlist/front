@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 
 import { setUser } from 'redux/actions';
 
+import logo from 'assets/img/logo.png';
+import logoBlack from 'assets/img/logo_black.png';
+
 // reactstrap components
 import {
   Container,
@@ -153,7 +156,7 @@ function CustomNavbar(props) {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <img
                 alt="Curatedli.st a collaborative curated content"
-                src={require("assets/img/logo.png")}
+                src={logo}
               />
             </NavbarBrand>
             {togler}
@@ -171,7 +174,7 @@ function CustomNavbar(props) {
                     <Link to={{ pathname: "/", state: { user } }}>
                       <img
                         alt="..."
-                        src={require("assets/img/logo_black.png")}
+                        src={logoBlack}
                       />
                     </Link>
                   </Col>
