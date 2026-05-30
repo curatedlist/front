@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import { useToasts } from 'react-toast-notifications';
-import { Helmet } from 'react-helmet';
+import toast from 'react-hot-toast';
+import { Helmet } from 'react-helmet-async';
 
 // reactstrap components
 import {
@@ -26,7 +25,6 @@ import { listService } from '_services/list.service';
 
 function ListDetails(props) {
   const [list, setList] = useState(props.list);
-  const { addToast } = useToasts()
 
   const addItem = (item) => {
     let newList = Object.assign({}, list);
@@ -45,18 +43,18 @@ function ListDetails(props) {
     listService.addItem(props.user.idToken, props.list.id, values).then((item) => {
       resetForm();
       addItem(item);
-      addToast("Item added succesfully", { appearance: 'info', autoDismiss: true })
+      toast.success("Item added succesfully")
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   };
 
   const deleteItem = (itemId) => {
     listService.deleteItem(props.user.idToken, props.list.id, itemId).then(item => {
       replaceItem(item);
-      addToast("Item deleted succesfully", { appearance: 'info', autoDismiss: true })
+      toast.success("Item deleted succesfully")
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   }
 
@@ -64,9 +62,9 @@ function ListDetails(props) {
     listService.fav(props.user.idToken, props.list.id).then(list => {
       props.user.favs.push(list.id);
       setList(list);
-      addToast("List Favorited", { appearance: 'info', autoDismiss: true })
+      toast.success("List Favorited")
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   };
 
@@ -75,9 +73,9 @@ function ListDetails(props) {
       const index = props.user.favs.indexOf(props.list.id)
       if (index !== -1) props.user.favs.splice(index);
       setList(list);
-      addToast("List unfaved", { appearance: 'info', autoDismiss: true })
+      toast.success("List unfaved")
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   };
 
@@ -218,19 +216,18 @@ function ListDetails(props) {
   )
 }
 
-const ListDetailsWithRouter = withRouter(ListDetails);
-
 function ListPage(props) {
+  const { id } = useParams();
   const [listRequest, setListRequest] = useState({
     list: [],
     loading: true,
     error: undefined
   });
-  
+
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    listService.get(props.match.params.id)
+    listService.get(id)
       .then(
         (list) => {
           setListRequest({
@@ -247,7 +244,7 @@ function ListPage(props) {
           });
         }
       )
-  }, [props.match.params.id]);
+  }, [id]);
 
   const {list, error, loading} = listRequest
   return (
@@ -276,7 +273,7 @@ function ListPage(props) {
               <meta property="og:description" content={list.description} />
               <meta property="og:image" content={list.owner.avatar_url ? list.owner.avatar_url : "https://joeschmoe.io/api/v1/" + list.owner.email} />
             </Helmet>
-            <ListDetailsWithRouter key={list.id} list={list} user={props.user} />
+            <ListDetails key={list.id} list={list} user={props.user} />
           </>
         }
       </Container>

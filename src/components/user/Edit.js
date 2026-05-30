@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { setUser } from 'redux/actions';
 import classnames from 'classnames';
 import { Formik, Form, Field } from 'formik';
-import { useToasts } from 'react-toast-notifications';
+import toast from 'react-hot-toast';
 
 // reactstrap components
 import {
@@ -29,7 +29,8 @@ import { userService } from '_services/user.service'
 
 function Edit(props) {
   const [user, setUser] = useState(props.user);
-  const { addToast } = useToasts()
+  const navigate = useNavigate();
+  const { username } = useParams();
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -57,18 +58,19 @@ function Edit(props) {
   const handleSubmit = (values) => {
     userService.update(props.user.idToken, user.id, values).then(user => {
       setUser(user);
-      props.history.push("/by/" + user.username)
+      navigate("/by/" + user.username)
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   };
 
 
-  if (Object.keys(user).length === 0 || user.username !== props.match.params.username) {
+  if (Object.keys(user).length === 0 || user.username !== username) {
     return (
       <>
-        <Redirect
-          to={"/by/" + props.match.params.username}
+        <Navigate
+          to={"/by/" + username}
+          replace
         />
       </>
     );
@@ -188,4 +190,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(Edit));
+)(Edit);

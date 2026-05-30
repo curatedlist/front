@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // reactstrap components
 import {
@@ -22,6 +23,7 @@ import App from 'App';
 import { listService } from '_services/list.service';
 
 function CreateList(props) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -31,7 +33,7 @@ function CreateList(props) {
   const createList = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    listService.create(props.user.idToken, data).then(list => props.history.push("/list/" + list.id));
+    listService.create(props.user.idToken, data).then(list => navigate("/list/" + list.id));
   };
 
 

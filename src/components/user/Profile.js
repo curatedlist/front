@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 
 // Dependencies & libraries
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
-import { Helmet } from 'react-helmet';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Helmet } from 'react-helmet-async';
 
 // reactstrap components
 import {
@@ -38,9 +38,9 @@ function Profile(props) {
 
   const [section, setSection] = useState(props.section);
   
-  const { addToast } = useToasts();
+  const navigate = useNavigate();
 
-  const username = props.match.params.username;
+  const { username } = useParams();
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -50,7 +50,7 @@ function Profile(props) {
   useEffect(() => {
     const loadUser = async (username) => {
       if (username === undefined) {
-        props.history.push("/all");
+        navigate("/all");
       }
       await userService.getByUsername(username)
           .then(
@@ -69,15 +69,15 @@ function Profile(props) {
               });
             }
           ).catch(error => {
-            addToast(error.message, { appearance: 'error', autoDismiss: true })
+            toast.error(error.message)
           })
     }
     loadUser(username);
-  }, [username,addToast, props.history]);
+  }, [username, navigate]);
   
   useEffect(() => {
     const loadLists = (username, section) => {
-      props.history.push("/by/" + username + "/" + section);
+      navigate("/by/" + username + "/" + section);
       listService.getListsByUsername(username, section)
         .then(
           (lists) => {
@@ -97,7 +97,7 @@ function Profile(props) {
         )
     }
     loadLists(username, section);
-  }, [username, section, props.history]);
+  }, [username, section, navigate]);
 
   const currentUser = props.user;
   const { userloading, user, userError } = userRequest;
@@ -250,4 +250,4 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps
-)(withRouter(Profile));
+)(Profile);

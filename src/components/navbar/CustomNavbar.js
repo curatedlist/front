@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { setUser } from 'redux/actions';
@@ -33,7 +33,8 @@ import { loadSession, clearSession } from '_helpers/auth';
 
 function CustomNavbar(props) {
   const [collapseClasses, setCollapseClasses] = useState("");
-  var {user, history} = props;
+  var { user } = props;
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -44,11 +45,11 @@ function CustomNavbar(props) {
         if (saved) {
           props.setUser(saved);
           if (saved.username === "") {
-            history.push("/create");
+            navigate("/create");
           }
         }
       } else if (user.username === "") {
-        history.push("/create");
+        navigate("/create");
       }
     }
     fetchData();
@@ -205,4 +206,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(CustomNavbar));
+)(CustomNavbar);
