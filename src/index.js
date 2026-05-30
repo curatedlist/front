@@ -1,8 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { ToastProvider } from 'react-toast-notifications';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import store from './redux/store';
@@ -22,39 +23,28 @@ import 'assets/vendor/nucleo/css/nucleo-icons.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/vendor/nucleo/scss/argon-design-system.scss";
 
-ReactDOM.render(
+createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-  <Provider store={store}>
-    <ToastProvider placement="top-center">
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/"
-            component={Home} />
-          <Route exact path="/all"
-            component={Explore} />
-          <Route exact path="/login"
-            component={Login} />
-          <Route exact path="/create"
-            render={(props) => <Create {...props} />} />
-          <Route exact path="/by/:username"
-            render={(props) => <Profile section="lists" {...props} />} />
-          <Route exact path="/by/:username/favs"
-            render={(props) => <Profile section="favs" {...props} />} />
-          <Route exact path="/by/:username/lists"
-            render={(props) => <Profile section="lists" {...props} />} />
-          <Route exact path="/by/:username/following"
-            render={(props) => <Profile section="following" {...props} />} />
-          <Route exact path="/by/:username/edit"
-            render={(props) => <Edit {...props} />} />
-          <Route exact path="/list/create"
-            render={(props) => <CreateList {...props} />} />
-          <Route exact path="/list/:id"
-            render={(props) => <ListPage {...props} />} />
-          <Route path="*" component={NotFound} status={404}/>
-        </Switch>
-      </BrowserRouter >
-    </ToastProvider>
-  </Provider>
-  </GoogleOAuthProvider>,
-  document.getElementById('root')
+    <HelmetProvider>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Toaster position="top-center" />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/all" element={<Explore />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/create" element={<Create />} />
+            <Route path="/by/:username" element={<Profile section="lists" />} />
+            <Route path="/by/:username/favs" element={<Profile section="favs" />} />
+            <Route path="/by/:username/lists" element={<Profile section="lists" />} />
+            <Route path="/by/:username/following" element={<Profile section="following" />} />
+            <Route path="/by/:username/edit" element={<Edit />} />
+            <Route path="/list/create" element={<CreateList />} />
+            <Route path="/list/:id" element={<ListPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </HelmetProvider>
+  </GoogleOAuthProvider>
 );

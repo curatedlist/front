@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 // Dependencies & libraries
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
+import { Navigate, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { GoogleLogin } from '@react-oauth/google';
 
 import { setUser } from 'redux/actions';
@@ -23,7 +23,7 @@ import App from 'App';
 import { userService } from '_services/user.service'
 
 function Login(props) {
-  const { addToast } = useToasts()
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -38,21 +38,19 @@ function Login(props) {
         saveSession(user);
         props.setUser(user);
         if (user.username === "") {
-          props.history.push("/create");
+          navigate("/create");
         } else {
-          props.history.push("/by/" + user.username);
+          navigate("/by/" + user.username);
         }
       })
       .catch(error => {
-        addToast(error.message, { appearance: 'error', autoDismiss: true });
+        toast.error(error.message);
       });
   };
 
   if (Object.keys(props.user).length !== 0) {
     return (
-      <>
-        <Redirect to={"/by/" + props.user.username} />
-      </>
+      <Navigate to={"/by/" + props.user.username} replace />
     );
   }
   return (
@@ -65,7 +63,7 @@ function Login(props) {
               <div className="d-inline-block">
                 <GoogleLogin
                   onSuccess={handleSuccess}
-                  onError={() => addToast('Login failed', { appearance: 'error', autoDismiss: true })}
+                  onError={() => toast.error('Login failed')}
                   useOneTap
                 />
               </div>
@@ -85,4 +83,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { setUser }
-)(withRouter(Login));
+)(Login);

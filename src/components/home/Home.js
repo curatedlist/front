@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 import checklistImg from 'assets/img/theme/checklist.svg';
 import reviewImg from 'assets/img/theme/review.svg';

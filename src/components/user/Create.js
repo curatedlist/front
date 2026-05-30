@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { setUser } from 'redux/actions';
 import classnames from 'classnames';
 import { Formik, Form, Field } from 'formik';
-import { useToasts } from 'react-toast-notifications';
+import toast from 'react-hot-toast';
 
 // reactstrap components
 import {
@@ -27,7 +27,7 @@ import App from 'App'
 import { userService } from '_services/user.service'
 
 function Create(props) {
-  const { addToast } = useToasts()
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -51,9 +51,9 @@ function Create(props) {
   const handleSubmit = (values) => {
     userService.update(props.user.idToken, user.id, values).then(user => {
       props.setUser(user);
-      props.history.push("/by/" + user.username)
+      navigate("/by/" + user.username)
     }).catch(error => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true })
+      toast.error(error.message)
     });
   };
 
@@ -61,7 +61,7 @@ function Create(props) {
   if (Object.keys(user).length === 0) {
     return (
       <>
-        <Redirect to="/login" />
+        <Navigate to="/login" replace />
       </>
     );
   } else {
