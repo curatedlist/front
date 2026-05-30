@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { Helmet } from 'react-helmet';
 
+import checklistImg from 'assets/img/theme/checklist.svg';
+
 // reactstrap components
 import {
   Alert,
@@ -109,7 +111,7 @@ export default function Explore() {
           <title>Collaborative Curated Content | curatedli.st</title>
           <meta property="og:title" content="Collaborative Curated Content | curatedli.st" />
           <meta property="og:description" content="Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content." />
-          <meta property="og:image" content={require("assets/img/theme/checklist.svg")} />
+          <meta property="og:image" content={checklistImg} />
           <link rel="canonical" href="https://curatedli.st" />
         </Helmet>
         <div className="nav-wrapper mt--300 card-profile">

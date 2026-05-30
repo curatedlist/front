@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
+import checklistImg from 'assets/img/theme/checklist.svg';
+import reviewImg from 'assets/img/theme/review.svg';
+
 // reactstrap components
 import {
   Badge,
@@ -37,7 +40,7 @@ function BigHero() {
             <img
               alt="..."
               className="img-center img-fluid"
-              src={require("assets/img/theme/checklist.svg")} />
+              src={checklistImg} />
           </div>
         </div>
       </div>
@@ -53,7 +56,7 @@ function Features() {
           <img
             alt="..."
             className="img-fluid floating"
-            src={require("assets/img/theme/review.svg")} />
+            src={reviewImg} />
         </Col>
         <Col className="order-md-1" md="6">
           <div className="pr-md-5">
@@ -132,7 +135,7 @@ export default function Home() {
         <title>Collaborative Curated Content | curatedli.st</title>
         <meta property="og:title" content="Collaborative Curated Content | curatedli.st" />
         <meta property="og:description" content="Collaborative curated content lists that won't suck. Share your content with others and get feedback. Review other's content." />
-        <meta property="og:image" content={require("assets/img/theme/checklist.svg")} />
+        <meta property="og:image" content={checklistImg} />
         <link rel="canonical" href="https://curatedli.st" />
       </Helmet>
       <Features />
