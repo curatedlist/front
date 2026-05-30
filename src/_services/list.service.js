@@ -13,7 +13,7 @@ export const listService = {
 };
 
 async function getAll(filter) {
-  let url = new URL(process.env.REACT_APP_API_URL + "lists/");
+  let url = new URL(import.meta.env.VITE_API_URL + "lists/");
   url.search = new URLSearchParams({ 'filter_by': filter }).toString();
   const res = await fetch(url).then(handleErrors);
   const result = await res.json();
@@ -21,14 +21,14 @@ async function getAll(filter) {
 }
 
 async function getListsByUsername(username, section) {
-  let url = new URL(process.env.REACT_APP_API_URL + "users/username/" + username + "/" + section);
+  let url = new URL(import.meta.env.VITE_API_URL + "users/username/" + username + "/" + section);
   const res = await fetch(url).then(handleErrors);
   const result = await res.json();
   return result.lists;
 }
 
 async function get(list_id) {
-  let url = new URL(process.env.REACT_APP_API_URL + "lists/id/" + list_id);
+  let url = new URL(import.meta.env.VITE_API_URL + "lists/id/" + list_id);
   const res = await fetch(url).then(handleErrors);
   const result = await res.json();
   return result.list;
@@ -43,7 +43,7 @@ async function create(idToken, data) {
       'Content-Type': 'application/json',
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/", requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.list;
 }
@@ -56,7 +56,7 @@ async function deleteList(idToken, list_id) {
       'Content-Type': 'application/json'
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id, requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id, requestOptions).then(handleErrors);
   const result = await res.json();
   return result.list;
 }
@@ -69,7 +69,7 @@ async function fav(idToken, list_id) {
       'Content-Type': 'application/json'
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/fav", requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id + "/fav", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.list;
 }
@@ -82,7 +82,7 @@ async function unfav(idToken, list_id) {
       'Content-Type': 'application/json'
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/unfav", requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id + "/unfav", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.list;
 }
@@ -96,7 +96,7 @@ async function addItem(idToken, list_id, values) {
       'Content-Type': 'application/json'
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/", requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id + "/items/", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.item;
 }
@@ -109,7 +109,7 @@ async function deleteItem(idToken, list_id, item_id) {
       'Content-Type': 'application/json'
     },
   };
-  const res = await fetch(process.env.REACT_APP_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions).then(handleErrors);
+  const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.item;
 }
