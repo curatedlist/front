@@ -63,6 +63,13 @@ function ItemSearchField({ value, setFieldValue }) {
     setFieldValue('description', result.description || '');
     setOpen(false);
     setResults([]);
+    // For books, lazily upgrade the author+year placeholder to the full
+    // Open Library synopsis (one extra fetch, only for the selected item).
+    if (result.category === 'book' && result.url) {
+      listService.bookDescription(result.url)
+        .then((desc) => { if (desc) setFieldValue('description', desc); })
+        .catch(() => { /* keep the placeholder description */ });
+    }
   };
 
   const grouped = CATEGORY_ORDER

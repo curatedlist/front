@@ -11,6 +11,7 @@ export const listService = {
   addItem,
   deleteItem,
   searchExternal,
+  bookDescription,
 };
 
 async function getAll(filter) {
@@ -122,4 +123,13 @@ async function searchExternal(query) {
   const res = await fetch(url).then(handleErrors);
   const result = await res.json();
   return result.results;
+}
+
+async function bookDescription(workUrl) {
+  // Full Open Library synopsis for a selected book (public endpoint).
+  let url = new URL(import.meta.env.VITE_API_URL + "search/book");
+  url.search = new URLSearchParams({ url: workUrl }).toString();
+  const res = await fetch(url).then(handleErrors);
+  const result = await res.json();
+  return result.description;
 }
