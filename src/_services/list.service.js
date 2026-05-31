@@ -10,6 +10,7 @@ export const listService = {
   unfav,
   addItem,
   deleteItem,
+  searchExternal,
 };
 
 async function getAll(filter) {
@@ -112,4 +113,17 @@ async function deleteItem(idToken, list_id, item_id) {
   const res = await fetch(import.meta.env.VITE_API_URL + "lists/" + list_id + "/items/" + item_id + "/delete", requestOptions).then(handleErrors);
   const result = await res.json();
   return result.item;
+}
+
+async function searchExternal(idToken, query) {
+  let url = new URL(import.meta.env.VITE_API_URL + "search/");
+  url.search = new URLSearchParams({ q: query }).toString();
+  const requestOptions = {
+    headers: {
+      'Authorization': 'Bearer ' + idToken,
+    },
+  };
+  const res = await fetch(url, requestOptions).then(handleErrors);
+  const result = await res.json();
+  return result.results;
 }
