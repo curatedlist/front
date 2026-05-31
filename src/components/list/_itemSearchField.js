@@ -60,6 +60,7 @@ function ItemSearchField({ value, setFieldValue }) {
     setFieldValue('name', result.name);
     setFieldValue('url', result.url || '');
     setFieldValue('pic_url', result.pic_url || '');
+    setFieldValue('description', result.description || '');
     setOpen(false);
     setResults([]);
   };
