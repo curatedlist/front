@@ -115,15 +115,11 @@ async function deleteItem(idToken, list_id, item_id) {
   return result.item;
 }
 
-async function searchExternal(idToken, query) {
+async function searchExternal(query) {
+  // /search is public (catalog data, no auth) — no Authorization header needed.
   let url = new URL(import.meta.env.VITE_API_URL + "search/");
   url.search = new URLSearchParams({ q: query }).toString();
-  const requestOptions = {
-    headers: {
-      'Authorization': 'Bearer ' + idToken,
-    },
-  };
-  const res = await fetch(url, requestOptions).then(handleErrors);
+  const res = await fetch(url).then(handleErrors);
   const result = await res.json();
   return result.results;
 }
