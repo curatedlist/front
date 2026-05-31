@@ -20,6 +20,7 @@ import {
 // core components
 import App from 'App';
 import Item from 'components/list/_item';
+import ItemSearchField from 'components/list/_itemSearchField';
 
 import { listService } from '_services/list.service';
 
@@ -87,18 +88,17 @@ function ListDetails(props) {
         <Card className="mb-4 shadow">
           <CardBody>
             <Formik
-              initialValues={{ name: '', url: '', description: '' }}
+              initialValues={{ name: '', url: '', description: '', pic_url: '' }}
               onSubmit={handleAddItem}>
               {(props) => (
                 <Form>
                   <Row>
                     <Col md="5">
                       <FormGroup>
-                        <Field
-                          className="form-control form-control-alternative"
-                          name="name"
-                          placeholder="Item name"
-                          type="text" />
+                        <ItemSearchField
+                          idToken={user.idToken}
+                          value={props.values.name}
+                          setFieldValue={props.setFieldValue} />
                       </FormGroup>
                     </Col>
                     <Col md="5">
