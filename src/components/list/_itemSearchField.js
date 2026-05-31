@@ -13,7 +13,7 @@ const CATEGORY_ORDER = ['book', 'movie', 'music'];
 // that queries external catalogs (books / movies & TV / music). Selecting a
 // result autofills the Formik `name`, `url` and `pic_url` fields. Typing freely
 // (without selecting) still works — the backend then falls back to og:image.
-function ItemSearchField({ idToken, value, setFieldValue }) {
+function ItemSearchField({ value, setFieldValue }) {
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ function ItemSearchField({ idToken, value, setFieldValue }) {
       return;
     }
     setLoading(true);
-    listService.searchExternal(idToken, query)
+    listService.searchExternal(query)
       .then((res) => {
         setResults(res || []);
         setOpen(true);

@@ -96,7 +96,6 @@ function ListDetails(props) {
                     <Col md="5">
                       <FormGroup>
                         <ItemSearchField
-                          idToken={user.idToken}
                           value={props.values.name}
                           setFieldValue={props.setFieldValue} />
                       </FormGroup>
